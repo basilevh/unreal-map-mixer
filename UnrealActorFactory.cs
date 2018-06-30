@@ -1,0 +1,24 @@
+﻿// 18-01-2018, BVH
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace UnrealMapMixer
+{
+    public static class UnrealActorFactory
+    {
+        /// <summary>
+        /// Instantiates an actor with the correct type.
+        /// </summary>
+        public static UnrealActor FromText(string text)
+        {
+            if (text.StartsWith("Begin Actor Class=Brush ")
+                || text.StartsWith("Begin Actor Class=Mover "))
+                return new UnrealBrush(text);
+            else
+                return new UnrealActor(text);
+        }
+    }
+}
