@@ -9,6 +9,6 @@ namespace UnrealMapMixer
 {
     public interface IMapMixer
     {
-        UnrealMap Mix();
+        UnrealMap Mix(MapMixParams mixParams);
     }
 }

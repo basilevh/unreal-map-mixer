@@ -27,13 +27,13 @@ namespace UnrealMapMixer
             inputOpenDialog = new OpenFileDialog
             {
                 Filter = "Unreal Text (T3D) File (*.t3d)|*.t3d",
-                Title = "Select input file(s)",
+                Title = "Select source file(s)",
                 Multiselect = true
             };
             outputSaveDialog = new SaveFileDialog
             {
                 Filter = "Unreal Text (T3D) File (*.t3d)|*.t3d",
-                Title = "Specify output file"
+                Title = "Specify destination file"
             };
         }
 

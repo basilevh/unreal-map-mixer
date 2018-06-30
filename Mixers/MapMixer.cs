@@ -8,7 +8,7 @@ using System.Text;
 
 namespace UnrealMapMixer
 {
-    public abstract class MapMixer
+    public abstract class MapMixer : IMapMixer
     {
         // SkyZoneInfo and RockingSkyZoneInfo are still included
         public static readonly ReadOnlyCollection<string> ZoneInfoNames
