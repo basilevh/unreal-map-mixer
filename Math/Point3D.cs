@@ -8,7 +8,7 @@ using System.Text;
 namespace UnrealMapMixer
 {
     /// <summary>
-    /// Immutable class that represents an ordered triplet of floats that represent a point in a three-dimensional space.
+    /// Immutable class that represents a point in a three-dimensional space.
     /// </summary>
     public class Point3D
     {

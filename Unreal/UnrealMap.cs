@@ -4,24 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer
 {
     /// <summary>
     /// Represents a game level in Unreal Engine.
     /// </summary>
-    public class UnrealMap
+    public class UnrealMap : UnrealObject
     {
-        #region Constructors
-
         /// <summary>
         /// Creates a new modifiable map.
         /// </summary>
-        public UnrealMap()
+        public UnrealMap() : base()
         {
-            isReadOnly = false;
-            text = null;
-            textDirty = true;
             title = "New UMM Map";
             author = null;
             song = null;
@@ -31,45 +27,31 @@ namespace UnrealMapMixer
             brushCount = 0;
         }
 
-        /// <summary>
-        /// Creates a modifiable copy of an existing map.
-        /// </summary>
-        /// <param name="map">Map to be duplicated</param>
-        public UnrealMap(UnrealMap map) : this()
+        protected UnrealMap(UnrealMap map) : base(map)
         {
-            text = map.text;
-            textDirty = map.textDirty;
             title = map.title;
             author = map.author;
             song = map.song;
-            actors.AddRange(map.Actors);
-            brushes.AddRange(map.Brushes);
+            actors.AddRange(map.Actors.Select(a => a.Duplicate()));
+            brushes.AddRange(map.Brushes.Select(b => b.Duplicate()));
             actorCount = map.actorCount;
             brushCount = map.brushCount;
         }
-        
-        private UnrealMap(string text) : this()
-        {
-            // Parse text
-            loadText(text);
-            // Now make it read-only
-            isReadOnly = true;
-            // Store original text
-            this.text = text;
-            textDirty = false;
-        }
+
+        protected UnrealMap(string text) : base(text)
+        { }
+
+        /// <summary>
+        /// Creates a modifiable deep copy of this map.
+        /// </summary>
+        public UnrealMap Duplicate() => new UnrealMap(this);
 
         /// <summary>
         /// Creates a read-only instance of a map.
         /// </summary>
-        /// <param name="text">Text representation of the map</param>
+        /// <param name="text">T3D file contents to be parsed</param>
         public static UnrealMap FromText(string text) => new UnrealMap(text);
 
-        #endregion
-
-        private bool isReadOnly;
-        private string text;
-        private bool textDirty; // whether 'text' must be updated before being returned
         private string title;
         private string author;
         private string song;
@@ -78,24 +60,9 @@ namespace UnrealMapMixer
         private int actorCount;
         private int brushCount;
 
-        #region Public fields
-
         /// <summary>
         /// The file content for this map. This can be either the original text or newly generated text.
         /// </summary>
-        public string Text
-        {
-            get
-            {
-                if (textDirty)
-                { 
-                    text = generateText();
-                    textDirty = false;
-                }
-                return text;
-            }
-        }
-
         public string Title => title;
 
         public string Author => author;
@@ -113,7 +80,7 @@ namespace UnrealMapMixer
         public void AddActor(UnrealActor actor)
         {
             if (isReadOnly)
-                throw new InvalidOperationException("This map cannot be modified since it is read from a file");
+                throw new InvalidOperationException("This map cannot be modified because it is a source file");
             else
             {
                 if (actor is UnrealBrush)
@@ -130,68 +97,44 @@ namespace UnrealMapMixer
             }
         }
 
+        #region Intelligence
+
+        public void RemoveTrappedPlayerStarts()
+        {
+            // TODO
+        }
+
+        public Point3D GetCenterOfGravity()
+        {
+            // TODO
+            return new Point3D(0.0, 0.0, 0.0);
+        }
+
         #endregion
 
         #region Text handling
 
-        /* T3D Map Format:
-         * Begin Map
-         * Begin Actor Class=... Name=...
-         *     Property=Value
-         *     ...
-         * End Actor
-         * ...
-         * End Map
-         */
-
-        private void loadText(string text)
+        protected override string generateText()
         {
-            loadInfo(text);
-            loadActors(text);
+            return T3DParser.GenerateText(actors);
         }
 
-        private void loadInfo(string text)
+        protected override void loadText(string text)
         {
-            int start = text.IndexOf("Begin Actor Class=LevelInfo ");
-            start = text.IndexOf("Title=", start);
-            // TODO
-            title = "";
-            author = "";
-            song = "";
+            foreach (var actor in T3DParser.LoadActors(text))
+                AddActor(actor);
+            loadInfo();
         }
 
-        private void loadActors(string text)
+        private void loadInfo()
         {
-            int start = text.IndexOf("Begin Actor "); ;
-            while (start != -1)
+            var levelInfo = Actors.Where(a => a.Class == "LevelInfo").FirstOrDefault();
+            if (levelInfo != null)
             {
-                // Get length of this block
-                int end = text.IndexOf("End Actor", start) + "End Actor".Length;
-                int length = end - start;
-
-                // Extract and add actor
-                string actorText = text.Substring(start, length);
-                var actor = UnrealActorFactory.FromText(actorText);
-                AddActor(actor); // increments actorCount and brushCount as necessary
-
-                // Next iteration
-                start = text.IndexOf("Begin Actor ", end);
+                title = levelInfo.GetProperty("Title");
+                author = levelInfo.GetProperty("Author");
+                song = levelInfo.GetProperty("Song");
             }
-        }
-
-        private string generateText()
-        {
-            var builder = new StringBuilder();
-
-            // Add header
-            builder.AppendLine("Begin Map");
-            // Add all actors
-            foreach (var actor in actors)
-                builder.AppendLine(actor.Text);
-            // Add footer
-            builder.AppendLine("End Map");
-
-            return builder.ToString();
         }
 
         #endregion

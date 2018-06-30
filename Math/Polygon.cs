@@ -13,11 +13,17 @@ namespace UnrealMapMixer
         {
             this.vertices = new List<Point3D>(vertices);
             this.normal = new Vector3D(normal);
-            getEdges();
+
+            // Get all edges
+            // Consecutive vertex pairs (including last-first) determine the edges
+            var verts1 = vertices; // original list
+            var verts2 = vertices.Skip(1).Concat(new[] { vertices.First() }); // cyclic shift
+            edges = Enumerable.Zip(verts1, verts2,
+                        (v, w) => new Line3D(v, w)).ToList();
         }
 
         private List<Point3D> vertices;
-        private Vector3D normal; // mathematically wrong datatype but same purpose
+        private Vector3D normal;
         private List<Line3D> edges;
 
         public IEnumerable<Point3D> Vertices => vertices;
@@ -25,15 +31,6 @@ namespace UnrealMapMixer
         public Vector3D Normal => normal;
 
         public IEnumerable<Line3D> Edges => edges;
-
-        private void getEdges()
-        {
-            // Consecutive vertex pairs (including last-first) determine the edges
-            var verts1 = vertices;
-            var verts2 = vertices.Skip(1).Concat(new[] { vertices.First() }); // cyclic shift
-            edges = Enumerable.Zip(verts1, verts2,
-                        (v, w) => new Line3D(v, w)).ToList();
-        }
 
         /// <returns>Whether the normal vector is non-zero in one dimension only.</returns>
         public bool IsSlanted() => (getNonZeroDims() == 1);

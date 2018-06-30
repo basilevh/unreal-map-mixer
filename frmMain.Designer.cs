@@ -45,14 +45,14 @@
             this.lblSubtract = new System.Windows.Forms.Label();
             this.numOther = new System.Windows.Forms.NumericUpDown();
             this.lblOther = new System.Windows.Forms.Label();
-            this.txtExActors = new System.Windows.Forms.TextBox();
+            this.txtExcludeActors = new System.Windows.Forms.TextBox();
             this.btnGenerate = new System.Windows.Forms.Button();
             this.grpInputFiles = new System.Windows.Forms.GroupBox();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tlblAuthor = new System.Windows.Forms.ToolStripStatusLabel();
             this.chkExMore = new System.Windows.Forms.CheckBox();
-            this.grpExActors = new System.Windows.Forms.GroupBox();
+            this.grpExcludeActors = new System.Windows.Forms.GroupBox();
             this.chkExPortal = new System.Windows.Forms.CheckBox();
             this.chkExInvis = new System.Windows.Forms.CheckBox();
             this.chkExZoneInfo = new System.Windows.Forms.CheckBox();
@@ -80,7 +80,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numSubtract)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOther)).BeginInit();
             this.grpInputFiles.SuspendLayout();
-            this.grpExActors.SuspendLayout();
+            this.grpExcludeActors.SuspendLayout();
             this.grpIntelligence.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -281,17 +281,17 @@
             this.lblOther.TabIndex = 6;
             this.lblOther.Text = "&All other Actors (%):";
             // 
-            // txtExActors
+            // txtExcludeActors
             // 
-            this.txtExActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.txtExcludeActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtExActors.Location = new System.Drawing.Point(6, 111);
-            this.txtExActors.Multiline = true;
-            this.txtExActors.Name = "txtExActors";
-            this.txtExActors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtExActors.Size = new System.Drawing.Size(248, 91);
-            this.txtExActors.TabIndex = 0;
+            this.txtExcludeActors.Location = new System.Drawing.Point(6, 111);
+            this.txtExcludeActors.Multiline = true;
+            this.txtExcludeActors.Name = "txtExcludeActors";
+            this.txtExcludeActors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtExcludeActors.Size = new System.Drawing.Size(248, 91);
+            this.txtExcludeActors.TabIndex = 0;
             // 
             // btnGenerate
             // 
@@ -357,21 +357,21 @@
             this.chkExMore.Text = "More (specific &names only):";
             this.chkExMore.UseVisualStyleBackColor = true;
             // 
-            // grpExActors
+            // grpExcludeActors
             // 
-            this.grpExActors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.grpExcludeActors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpExActors.Controls.Add(this.chkExPortal);
-            this.grpExActors.Controls.Add(this.chkExInvis);
-            this.grpExActors.Controls.Add(this.chkExMore);
-            this.grpExActors.Controls.Add(this.chkExZoneInfo);
-            this.grpExActors.Controls.Add(this.txtExActors);
-            this.grpExActors.Location = new System.Drawing.Point(372, 359);
-            this.grpExActors.Name = "grpExActors";
-            this.grpExActors.Size = new System.Drawing.Size(260, 208);
-            this.grpExActors.TabIndex = 7;
-            this.grpExActors.TabStop = false;
-            this.grpExActors.Text = "Excluded Actors";
+            this.grpExcludeActors.Controls.Add(this.chkExPortal);
+            this.grpExcludeActors.Controls.Add(this.chkExInvis);
+            this.grpExcludeActors.Controls.Add(this.chkExMore);
+            this.grpExcludeActors.Controls.Add(this.chkExZoneInfo);
+            this.grpExcludeActors.Controls.Add(this.txtExcludeActors);
+            this.grpExcludeActors.Location = new System.Drawing.Point(372, 359);
+            this.grpExcludeActors.Name = "grpExcludeActors";
+            this.grpExcludeActors.Size = new System.Drawing.Size(260, 208);
+            this.grpExcludeActors.TabIndex = 7;
+            this.grpExcludeActors.TabStop = false;
+            this.grpExcludeActors.Text = "Excluded Actors";
             // 
             // chkExPortal
             // 
@@ -611,7 +611,7 @@
             this.Controls.Add(this.grpInputFiles);
             this.Controls.Add(this.btnGenerate);
             this.Controls.Add(this.grpProbabilities);
-            this.Controls.Add(this.grpExActors);
+            this.Controls.Add(this.grpExcludeActors);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(660, 660);
             this.Name = "frmMain";
@@ -628,8 +628,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numOther)).EndInit();
             this.grpInputFiles.ResumeLayout(false);
             this.grpInputFiles.PerformLayout();
-            this.grpExActors.ResumeLayout(false);
-            this.grpExActors.PerformLayout();
+            this.grpExcludeActors.ResumeLayout(false);
+            this.grpExcludeActors.PerformLayout();
             this.grpIntelligence.ResumeLayout(false);
             this.grpIntelligence.PerformLayout();
             this.ResumeLayout(false);
@@ -646,14 +646,14 @@
         private System.Windows.Forms.GroupBox grpProbabilities;
         private System.Windows.Forms.NumericUpDown numOther;
         private System.Windows.Forms.Label lblOther;
-        private System.Windows.Forms.TextBox txtExActors;
+        private System.Windows.Forms.TextBox txtExcludeActors;
         private System.Windows.Forms.Button btnGenerate;
         private System.Windows.Forms.GroupBox grpInputFiles;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel tlblAuthor;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.CheckBox chkExMore;
-        private System.Windows.Forms.GroupBox grpExActors;
+        private System.Windows.Forms.GroupBox grpExcludeActors;
         private System.Windows.Forms.Label lblKeepEventTag;
         private System.Windows.Forms.CheckBox chkKeepEventTag;
         private System.Windows.Forms.CheckBox chkKeepWorldCons;

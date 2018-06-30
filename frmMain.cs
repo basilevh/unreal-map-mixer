@@ -45,7 +45,7 @@ namespace UnrealMapMixer
         private void loadState()
         {
             txtInputFiles.Lines = Properties.Settings.Default.InputFiles?.Cast<string>().ToArray();
-            txtExActors.Lines = Properties.Settings.Default.ExcludedActors?.Cast<string>().ToArray();
+            txtExcludeActors.Lines = Properties.Settings.Default.ExcludedActors?.Cast<string>().ToArray();
         }
 
         private void saveState()
@@ -53,12 +53,18 @@ namespace UnrealMapMixer
             Properties.Settings.Default.InputFiles = new StringCollection();
             Properties.Settings.Default.InputFiles.AddRange(txtInputFiles.Lines);
             Properties.Settings.Default.ExcludedActors = new StringCollection();
-            Properties.Settings.Default.ExcludedActors.AddRange(txtExActors.Lines);
+            Properties.Settings.Default.ExcludedActors.AddRange(txtExcludeActors.Lines);
             Properties.Settings.Default.Save();
         }
 
         private void btnGenerate_Click(object sender, EventArgs e)
         {
+            if (txtInputFiles.Text.Length == 0)
+            {
+                MessageBox.Show("No source files are specified", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             // Get input maps
             var maps = txtInputFiles.Lines
                 .Where(s => s.Length != 0)
@@ -85,18 +91,18 @@ namespace UnrealMapMixer
                 KeepEventTagLinks = chkKeepEventTag.Checked,
                 KeepWorldConnections = chkKeepWorldCons.Checked,
                 ExpandPortals = chkExpandPortals.Checked,
-                SolidChance = (double)numSolid.Value / 100.0,
-                SemiSolidChance = (double)numSemiSolid.Value / 100.0,
-                NonSolidChance = (double)numNonSolid.Value / 100.0,
-                SubtractChance = (double)numSubtract.Value / 100.0,
-                MoverChance = (double)numMover.Value / 100.0,
-                LightChance = (double)numLight.Value / 100.0,
-                OtherChance = (double)numOther.Value / 100.0,
+                SolidProb = (double)numSolid.Value / 100.0,
+                SemiSolidProb = (double)numSemiSolid.Value / 100.0,
+                NonSolidProb = (double)numNonSolid.Value / 100.0,
+                SubtractProb = (double)numSubtract.Value / 100.0,
+                MoverProb = (double)numMover.Value / 100.0,
+                LightProb = (double)numLight.Value / 100.0,
+                OtherProb = (double)numOther.Value / 100.0,
                 ExcludeInvisible = chkExInvis.Checked,
                 ExcludePortal = chkExPortal.Checked,
                 ExcludeZoneInfo = chkExZoneInfo.Checked,
                 ExcludeMore = chkExMore.Checked,
-                ExcludeMoreNames = txtExActors.Lines.Where(s => s.Length != 0)
+                ExcludeMoreNames = txtExcludeActors.Lines.Where(s => s.Length != 0)
             };
 
             // Perform mix
@@ -115,7 +121,7 @@ namespace UnrealMapMixer
         {
             if (inputOpenDialog.ShowDialog() == DialogResult.OK)
             {
-                // Replace list of files with those just selected
+                // Replace the list of files with those just selected
                 txtInputFiles.Clear();
                 foreach (string fileName in inputOpenDialog.FileNames)
                     txtInputFiles.AppendText(fileName + Environment.NewLine);

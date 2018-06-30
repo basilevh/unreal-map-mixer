@@ -19,9 +19,9 @@ namespace UnrealMapMixer
         public bool KeepWorldConnections;
         public bool ExpandPortals;
 
-        // Chances
-        public double SolidChance, SemiSolidChance, NonSolidChance,
-            SubtractChance, MoverChance, LightChance, OtherChance;
+        // Probabilities
+        public double SolidProb, SemiSolidProb, NonSolidProb,
+            SubtractProb, MoverProb, LightProb, OtherProb;
 
         // Excluded actors
         public bool ExcludeInvisible, ExcludePortal, ExcludeZoneInfo, ExcludeMore;

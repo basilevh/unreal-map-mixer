@@ -9,8 +9,8 @@ namespace UnrealMapMixer
 {
     /// <summary>
     /// UnrealMap mixer that merges multiple maps in a deterministic order. Every brush
-    /// is assigned a normalized priority, and the resulting map is constructed
-    /// from the interweaved list, sorted by priority.
+    /// is assigned a normalized rank, and the resulting map is constructed
+    /// from the interweaved list, sorted by rising ranks.
     /// </summary>
     public class OrderedMapMixer : MapMixer
     {
@@ -21,21 +21,23 @@ namespace UnrealMapMixer
 
         public override UnrealMap Mix(MapMixParams mixParams)
         {
-            var finalMap = new UnrealMap();
+            var destMap = new UnrealMap();
 
-            // Get brush-priority pairs & actors
-            var brushPrios = new List<Tuple<UnrealBrush, double>>();
+            // Get brush-rank pairs, actors and other features
+            var brushRanks = new List<Tuple<UnrealBrush, double>>();
             var allActors = new List<UnrealActor>(); // excluding brushes
+            var cogDict = new Dictionary<UnrealMap, Point3D>();
             foreach (var map in maps)
             { 
-                brushPrios.AddRange(map.Brushes.Select(
+                brushRanks.AddRange(map.Brushes.Select(
                         (b, i) => new Tuple<UnrealBrush, double>
                         (b, (double)i / map.BrushCount)));
                 allActors.AddRange(map.Actors.Where(a => !(a is UnrealBrush)));
+                cogDict[map] = map.GetCenterOfGravity();
             }
 
             // Merge all brushes
-            var allBrushes = brushPrios.OrderBy(t => t.Item2).Select(t => t.Item1);
+            var allBrushes = brushRanks.OrderBy(t => t.Item2).Select(t => t.Item1);
 
             // Pick brushes randomly
             var mixBrushes = new List<UnrealBrush>();
@@ -47,22 +49,22 @@ namespace UnrealMapMixer
                 if (mixParams.ExcludePortal && brush.IsPortal)
                     continue;
 
-                // TODO bug with exclusions?
-                // TODO add tests!
+                // TODO: bug with exclusions?
+                // TODO: add tests!
 
                 // Get probability
                 double prob;
                 switch (brush.Type)
                 {
-                    case BrushType.Solid: prob = mixParams.SolidChance; break;
-                    case BrushType.SemiSolid: prob = mixParams.SemiSolidChance; break;
-                    case BrushType.NonSolid: prob = mixParams.NonSolidChance; break;
-                    case BrushType.Subtract: prob = mixParams.SubtractChance; break;
-                    case BrushType.Mover: prob = mixParams.MoverChance; break;
+                    case BrushType.Solid: prob = mixParams.SolidProb; break;
+                    case BrushType.SemiSolid: prob = mixParams.SemiSolidProb; break;
+                    case BrushType.NonSolid: prob = mixParams.NonSolidProb; break;
+                    case BrushType.Subtract: prob = mixParams.SubtractProb; break;
+                    case BrushType.Mover: prob = mixParams.MoverProb; break;
                     default: prob = 0.0; break;
                 }
-
-                if (genRand(prob))
+                
+                if (randExp(prob))
                     mixBrushes.Add(brush);
             }
 
@@ -77,25 +79,33 @@ namespace UnrealMapMixer
                     continue;
 
                 // Get probability
+                // TODO: not all lights are of class 'Light'
                 double prob;
                 if (actor.Class == "Light")
-                    prob = mixParams.LightChance;
+                    prob = mixParams.LightProb;
                 else
-                    prob = mixParams.OtherChance;
+                    prob = mixParams.OtherProb;
 
-                if (genRand(prob))
+                if (randExp(prob))
                     mixActors.Add(actor);
             }
 
             // Add selected brushes & actors
             foreach (var brush in mixBrushes)
-                finalMap.AddActor(brush);
+                destMap.AddActor(brush);
             foreach (var actor in mixActors)
-                finalMap.AddActor(actor);
+                destMap.AddActor(actor);
 
-            return finalMap;
+            // Remove trapped PlayerStarts
+            if (mixParams.RemoveTrappedPlayerStarts)
+                destMap.RemoveTrappedPlayerStarts();
+
+            return destMap;
         }
 
-        private static bool genRand(double probTrue) => (rnd.NextDouble() < probTrue);
+        /// <summary>
+        /// Runs a random experiment with a boolean outcome.
+        /// </summary>
+        private static bool randExp(double probTrue) => (rnd.NextDouble() < probTrue);
     }
 }

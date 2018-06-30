@@ -7,6 +7,9 @@ using System.Text;
 
 namespace UnrealMapMixer
 {
+    /// <summary>
+    /// Immutable class that represents an Euler-angle orientation in a three-dimensional space.
+    /// </summary>
     public class Rotation3D
     {
         public Rotation3D(double pitch, double yaw, double roll)
@@ -16,7 +19,10 @@ namespace UnrealMapMixer
             this.roll = roll;
         }
 
-        public Rotation3D(Rotation3D point) : this(point.pitch, point.yaw, point.roll)
+        public Rotation3D(Rotation3D rotation) : this(rotation.pitch, rotation.yaw, rotation.roll)
+        { }
+
+        public Rotation3D() : this(0.0, 0.0, 0.0)
         { }
 
         public static Rotation3D FromProperty(string value)

@@ -21,20 +21,26 @@ namespace UnrealMapMixer
         private const double MinVertexDist = 1e-3;
         private const double MinVertexDistSq = MinVertexDist * MinVertexDist;
 
-        #region Constructors
+        /// <summary>
+        /// Creates a new modifiable brush.
+        /// </summary>
+        public UnrealBrush() : base()
+        {
+            polyFlags = 0;
+            isInvisible = false;
+            isPortal = false;
+            type = BrushType.Unknown;
+            polygons = new List<Polygon>();
+            vertices = new List<Point3D>();
+            edges = new List<Line3D>();
+        }
 
         /// <summary>
         /// Creates a read-only instance of a brush.
         /// </summary>
         /// <param name="text">Text representation of the brush</param>
-        public UnrealBrush(string text) : base(text)
-        {
-            loadText(text);
-            getVertices();
-            getEdges();
-        }
-
-        #endregion
+        protected UnrealBrush(string text) : base(text)
+        { }
 
         protected ulong polyFlags;
         protected bool isInvisible;
@@ -43,8 +49,6 @@ namespace UnrealMapMixer
         protected List<Polygon> polygons;
         protected List<Point3D> vertices;
         protected List<Line3D> edges;
-
-        #region Public fields
 
         public ulong PolyFlags => polyFlags;
 
@@ -60,12 +64,14 @@ namespace UnrealMapMixer
 
         public IEnumerable<Line3D> Edges => edges;
 
-        #endregion
-
         #region Text handling
 
         private void loadText(string text)
         {
+            loadText(text);
+            getVertices();
+            getEdges();
+
             loadFlags(text);
             loadType(text);
             loadPolys(text);
@@ -234,8 +240,8 @@ namespace UnrealMapMixer
         /// <returns>Whether this brush has at least one slanted surface.</returns>
         public bool IsSlanted() => polygons.Any(p => p.IsSlanted());
 
-        /// <returns>Whether this brush is a non-slanted cube.</returns>
-        public bool IsCube()
+        /// <returns>Whether this brush is a non-slanted cuboid (i.e. a stretched cube).</returns>
+        public bool IsCuboid()
         {
             return (!IsSlanted()
                 && vertices.Count == 8 && polygons.Count == 6
@@ -261,7 +267,7 @@ namespace UnrealMapMixer
         /// </returns>
         public bool? Overlaps(UnrealBrush other)
         {
-            if (IsCube())
+            if (IsCuboid())
             {
                 // TODO
                 return null;

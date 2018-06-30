@@ -1,0 +1,69 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace UnrealMapMixer.Unreal
+{
+    /// <summary>
+    /// Superclass of all relevant Unreal Engine objects.
+    /// </summary>
+    public abstract class UnrealObject
+    {
+        /// <summary>
+        /// Creates a new modifiable object.
+        /// </summary>
+        public UnrealObject()
+        {
+            isReadOnly = false;
+            text = null;
+            textDirty = true;
+        }
+
+        /// <summary>
+        /// Creates a modifiable deep copy of an existing object.
+        /// </summary>
+        /// <param name="orig">Object to be duplicated</param>
+        protected UnrealObject(UnrealObject orig) : this()
+        {
+            text = orig.text;
+            textDirty = orig.textDirty;
+        }
+
+        /// <summary>
+        /// Creates a read-only instance of an object.
+        /// </summary>
+        /// <param name="text">T3D file contents to be parsed</param>
+        protected UnrealObject(string text) : this()
+        {
+            // Parse text
+            loadText(text);
+            // Now make it read-only
+            isReadOnly = true;
+            // Store original text
+            this.text = text;
+            textDirty = false;
+        }
+
+        protected readonly bool isReadOnly;
+        private string text;
+        private bool textDirty; // whether 'text' must be updated before being returned
+
+        public string Text
+        {
+            get
+            {
+                if (textDirty)
+                {
+                    text = generateText();
+                    textDirty = false;
+                }
+                return text;
+            }
+        }
+
+        protected abstract string generateText();
+
+        protected abstract void loadText(string text);
+    }
+}
