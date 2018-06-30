@@ -34,7 +34,7 @@
             this.numSolid = new System.Windows.Forms.NumericUpDown();
             this.numLight = new System.Windows.Forms.NumericUpDown();
             this.lblLight = new System.Windows.Forms.Label();
-            this.grpChances = new System.Windows.Forms.GroupBox();
+            this.grpProbabilities = new System.Windows.Forms.GroupBox();
             this.numNonSolid = new System.Windows.Forms.NumericUpDown();
             this.lblNonSolid = new System.Windows.Forms.Label();
             this.numSemiSolid = new System.Windows.Forms.NumericUpDown();
@@ -73,14 +73,13 @@
             this.lblMode = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numSolid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numLight)).BeginInit();
-            this.grpChances.SuspendLayout();
+            this.grpProbabilities.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numNonSolid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSemiSolid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSubtract)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOther)).BeginInit();
             this.grpInputFiles.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.grpExActors.SuspendLayout();
             this.grpIntelligence.SuspendLayout();
             this.SuspendLayout();
@@ -94,7 +93,7 @@
             this.txtInputFiles.Multiline = true;
             this.txtInputFiles.Name = "txtInputFiles";
             this.txtInputFiles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtInputFiles.Size = new System.Drawing.Size(548, 80);
+            this.txtInputFiles.Size = new System.Drawing.Size(608, 80);
             this.txtInputFiles.TabIndex = 1;
             // 
             // lblSolid
@@ -108,8 +107,9 @@
             // 
             // numSolid
             // 
+            this.numSolid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numSolid.DecimalPlaces = 1;
-            this.numSolid.Location = new System.Drawing.Point(134, 19);
+            this.numSolid.Location = new System.Drawing.Point(194, 19);
             this.numSolid.Name = "numSolid";
             this.numSolid.Size = new System.Drawing.Size(60, 20);
             this.numSolid.TabIndex = 3;
@@ -121,8 +121,9 @@
             // 
             // numLight
             // 
+            this.numLight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numLight.DecimalPlaces = 1;
-            this.numLight.Location = new System.Drawing.Point(134, 149);
+            this.numLight.Location = new System.Drawing.Point(194, 149);
             this.numLight.Name = "numLight";
             this.numLight.Size = new System.Drawing.Size(60, 20);
             this.numLight.TabIndex = 5;
@@ -141,34 +142,35 @@
             this.lblLight.TabIndex = 4;
             this.lblLight.Text = "&Lights (%):";
             // 
-            // grpChances
+            // grpProbabilities
             // 
-            this.grpChances.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpChances.Controls.Add(this.numNonSolid);
-            this.grpChances.Controls.Add(this.lblNonSolid);
-            this.grpChances.Controls.Add(this.numSemiSolid);
-            this.grpChances.Controls.Add(this.lblSemiSolid);
-            this.grpChances.Controls.Add(this.numMover);
-            this.grpChances.Controls.Add(this.lblMover);
-            this.grpChances.Controls.Add(this.numSubtract);
-            this.grpChances.Controls.Add(this.lblSubtract);
-            this.grpChances.Controls.Add(this.numOther);
-            this.grpChances.Controls.Add(this.lblOther);
-            this.grpChances.Controls.Add(this.numLight);
-            this.grpChances.Controls.Add(this.lblLight);
-            this.grpChances.Controls.Add(this.numSolid);
-            this.grpChances.Controls.Add(this.lblSolid);
-            this.grpChances.Location = new System.Drawing.Point(372, 152);
-            this.grpChances.Name = "grpChances";
-            this.grpChances.Size = new System.Drawing.Size(200, 201);
-            this.grpChances.TabIndex = 6;
-            this.grpChances.TabStop = false;
-            this.grpChances.Text = "Chances";
+            this.grpProbabilities.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.grpProbabilities.Controls.Add(this.numNonSolid);
+            this.grpProbabilities.Controls.Add(this.lblNonSolid);
+            this.grpProbabilities.Controls.Add(this.numSemiSolid);
+            this.grpProbabilities.Controls.Add(this.lblSemiSolid);
+            this.grpProbabilities.Controls.Add(this.numMover);
+            this.grpProbabilities.Controls.Add(this.lblMover);
+            this.grpProbabilities.Controls.Add(this.numSubtract);
+            this.grpProbabilities.Controls.Add(this.lblSubtract);
+            this.grpProbabilities.Controls.Add(this.numOther);
+            this.grpProbabilities.Controls.Add(this.lblOther);
+            this.grpProbabilities.Controls.Add(this.numLight);
+            this.grpProbabilities.Controls.Add(this.lblLight);
+            this.grpProbabilities.Controls.Add(this.numSolid);
+            this.grpProbabilities.Controls.Add(this.lblSolid);
+            this.grpProbabilities.Location = new System.Drawing.Point(372, 152);
+            this.grpProbabilities.Name = "grpProbabilities";
+            this.grpProbabilities.Size = new System.Drawing.Size(260, 201);
+            this.grpProbabilities.TabIndex = 6;
+            this.grpProbabilities.TabStop = false;
+            this.grpProbabilities.Text = "Probabilities";
             // 
             // numNonSolid
             // 
+            this.numNonSolid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numNonSolid.DecimalPlaces = 1;
-            this.numNonSolid.Location = new System.Drawing.Point(134, 71);
+            this.numNonSolid.Location = new System.Drawing.Point(194, 71);
             this.numNonSolid.Name = "numNonSolid";
             this.numNonSolid.Size = new System.Drawing.Size(60, 20);
             this.numNonSolid.TabIndex = 15;
@@ -189,8 +191,9 @@
             // 
             // numSemiSolid
             // 
+            this.numSemiSolid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numSemiSolid.DecimalPlaces = 1;
-            this.numSemiSolid.Location = new System.Drawing.Point(134, 45);
+            this.numSemiSolid.Location = new System.Drawing.Point(194, 45);
             this.numSemiSolid.Name = "numSemiSolid";
             this.numSemiSolid.Size = new System.Drawing.Size(60, 20);
             this.numSemiSolid.TabIndex = 13;
@@ -211,8 +214,9 @@
             // 
             // numMover
             // 
+            this.numMover.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numMover.DecimalPlaces = 1;
-            this.numMover.Location = new System.Drawing.Point(134, 123);
+            this.numMover.Location = new System.Drawing.Point(194, 123);
             this.numMover.Name = "numMover";
             this.numMover.Size = new System.Drawing.Size(60, 20);
             this.numMover.TabIndex = 11;
@@ -233,8 +237,9 @@
             // 
             // numSubtract
             // 
+            this.numSubtract.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numSubtract.DecimalPlaces = 1;
-            this.numSubtract.Location = new System.Drawing.Point(134, 97);
+            this.numSubtract.Location = new System.Drawing.Point(194, 97);
             this.numSubtract.Name = "numSubtract";
             this.numSubtract.Size = new System.Drawing.Size(60, 20);
             this.numSubtract.TabIndex = 9;
@@ -255,8 +260,9 @@
             // 
             // numOther
             // 
+            this.numOther.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numOther.DecimalPlaces = 1;
-            this.numOther.Location = new System.Drawing.Point(134, 175);
+            this.numOther.Location = new System.Drawing.Point(194, 175);
             this.numOther.Name = "numOther";
             this.numOther.Size = new System.Drawing.Size(60, 20);
             this.numOther.TabIndex = 7;
@@ -284,15 +290,15 @@
             this.txtExActors.Multiline = true;
             this.txtExActors.Name = "txtExActors";
             this.txtExActors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtExActors.Size = new System.Drawing.Size(188, 92);
+            this.txtExActors.Size = new System.Drawing.Size(248, 91);
             this.txtExActors.TabIndex = 0;
             // 
             // btnGenerate
             // 
             this.btnGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenerate.Location = new System.Drawing.Point(372, 574);
+            this.btnGenerate.Location = new System.Drawing.Point(372, 573);
             this.btnGenerate.Name = "btnGenerate";
-            this.btnGenerate.Size = new System.Drawing.Size(200, 23);
+            this.btnGenerate.Size = new System.Drawing.Size(260, 23);
             this.btnGenerate.TabIndex = 8;
             this.btnGenerate.Text = "&Generate";
             this.btnGenerate.UseVisualStyleBackColor = true;
@@ -306,15 +312,15 @@
             this.grpInputFiles.Controls.Add(this.txtInputFiles);
             this.grpInputFiles.Location = new System.Drawing.Point(12, 12);
             this.grpInputFiles.Name = "grpInputFiles";
-            this.grpInputFiles.Size = new System.Drawing.Size(560, 134);
+            this.grpInputFiles.Size = new System.Drawing.Size(620, 134);
             this.grpInputFiles.TabIndex = 9;
             this.grpInputFiles.TabStop = false;
-            this.grpInputFiles.Text = "Input Files";
+            this.grpInputFiles.Text = "Source Files";
             // 
             // btnBrowse
             // 
             this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.Location = new System.Drawing.Point(479, 105);
+            this.btnBrowse.Location = new System.Drawing.Point(539, 105);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(75, 23);
             this.btnBrowse.TabIndex = 2;
@@ -324,9 +330,9 @@
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 600);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 599);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(584, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(644, 22);
             this.statusStrip1.TabIndex = 10;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -362,7 +368,7 @@
             this.grpExActors.Controls.Add(this.txtExActors);
             this.grpExActors.Location = new System.Drawing.Point(372, 359);
             this.grpExActors.Name = "grpExActors";
-            this.grpExActors.Size = new System.Drawing.Size(200, 209);
+            this.grpExActors.Size = new System.Drawing.Size(260, 208);
             this.grpExActors.TabIndex = 7;
             this.grpExActors.TabStop = false;
             this.grpExActors.Text = "Excluded Actors";
@@ -398,16 +404,14 @@
             this.chkExZoneInfo.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkExZoneInfo.Location = new System.Drawing.Point(6, 65);
             this.chkExZoneInfo.Name = "chkExZoneInfo";
-            this.chkExZoneInfo.Size = new System.Drawing.Size(210, 17);
+            this.chkExZoneInfo.Size = new System.Drawing.Size(253, 17);
             this.chkExZoneInfo.TabIndex = 1;
-            this.chkExZoneInfo.Text = "&ZoneInfo (and subclasses, except Sky)";
+            this.chkExZoneInfo.Text = "&ZoneInfo (and subclasses, except SkyZoneInfo)\r\n";
             this.chkExZoneInfo.UseVisualStyleBackColor = true;
             // 
             // chkKeepEventTag
             // 
             this.chkKeepEventTag.AutoSize = true;
-            this.chkKeepEventTag.Checked = true;
-            this.chkKeepEventTag.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkKeepEventTag.Enabled = false;
             this.chkKeepEventTag.Location = new System.Drawing.Point(6, 202);
             this.chkKeepEventTag.Name = "chkKeepEventTag";
@@ -433,8 +437,6 @@
             // chkKeepWorldCons
             // 
             this.chkKeepWorldCons.AutoSize = true;
-            this.chkKeepWorldCons.Checked = true;
-            this.chkKeepWorldCons.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkKeepWorldCons.Enabled = false;
             this.chkKeepWorldCons.Location = new System.Drawing.Point(6, 283);
             this.chkKeepWorldCons.Name = "chkKeepWorldCons";
@@ -478,7 +480,7 @@
             this.grpIntelligence.Controls.Add(this.lblKeepEventTag);
             this.grpIntelligence.Location = new System.Drawing.Point(12, 152);
             this.grpIntelligence.Name = "grpIntelligence";
-            this.grpIntelligence.Size = new System.Drawing.Size(354, 445);
+            this.grpIntelligence.Size = new System.Drawing.Size(354, 444);
             this.grpIntelligence.TabIndex = 9;
             this.grpIntelligence.TabStop = false;
             this.grpIntelligence.Text = "Intelligence";
@@ -500,8 +502,6 @@
             // chkExpandPortals
             // 
             this.chkExpandPortals.AutoSize = true;
-            this.chkExpandPortals.Checked = true;
-            this.chkExpandPortals.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkExpandPortals.Enabled = false;
             this.chkExpandPortals.Location = new System.Drawing.Point(6, 364);
             this.chkExpandPortals.Name = "chkExpandPortals";
@@ -524,13 +524,11 @@
             this.lblTranslateCOG.TabIndex = 14;
             this.lblTranslateCOG.Text = "If checked, all input maps will first be \'moved to the origin\' by steps of 64, to" +
     " prevent that the mixed map content would become too disjunct due to differently" +
-    " located original maps.";
+    " located source maps.";
             // 
             // chkTranslateCOG
             // 
             this.chkTranslateCOG.AutoSize = true;
-            this.chkTranslateCOG.Checked = true;
-            this.chkTranslateCOG.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkTranslateCOG.Enabled = false;
             this.chkTranslateCOG.Location = new System.Drawing.Point(6, 134);
             this.chkTranslateCOG.Name = "chkTranslateCOG";
@@ -542,8 +540,6 @@
             // chkRemTrapPlay
             // 
             this.chkRemTrapPlay.AutoSize = true;
-            this.chkRemTrapPlay.Checked = true;
-            this.chkRemTrapPlay.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkRemTrapPlay.Enabled = false;
             this.chkRemTrapPlay.Location = new System.Drawing.Point(6, 111);
             this.chkRemTrapPlay.Name = "chkRemTrapPlay";
@@ -609,22 +605,22 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 622);
+            this.ClientSize = new System.Drawing.Size(644, 621);
             this.Controls.Add(this.grpIntelligence);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.grpInputFiles);
             this.Controls.Add(this.btnGenerate);
-            this.Controls.Add(this.grpChances);
+            this.Controls.Add(this.grpProbabilities);
             this.Controls.Add(this.grpExActors);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(600, 661);
+            this.MinimumSize = new System.Drawing.Size(660, 660);
             this.Name = "frmMain";
             this.Text = "Unreal Tournament Map Mixer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.numSolid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numLight)).EndInit();
-            this.grpChances.ResumeLayout(false);
-            this.grpChances.PerformLayout();
+            this.grpProbabilities.ResumeLayout(false);
+            this.grpProbabilities.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numNonSolid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSemiSolid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMover)).EndInit();
@@ -632,8 +628,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numOther)).EndInit();
             this.grpInputFiles.ResumeLayout(false);
             this.grpInputFiles.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.grpExActors.ResumeLayout(false);
             this.grpExActors.PerformLayout();
             this.grpIntelligence.ResumeLayout(false);
@@ -649,7 +643,7 @@
         private System.Windows.Forms.NumericUpDown numSolid;
         private System.Windows.Forms.NumericUpDown numLight;
         private System.Windows.Forms.Label lblLight;
-        private System.Windows.Forms.GroupBox grpChances;
+        private System.Windows.Forms.GroupBox grpProbabilities;
         private System.Windows.Forms.NumericUpDown numOther;
         private System.Windows.Forms.Label lblOther;
         private System.Windows.Forms.TextBox txtExActors;

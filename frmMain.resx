@@ -124,7 +124,7 @@
     <value>If checked, all Event-Tag pairs will be transferred completely. This means that any copied Actor (e.g. a Mover) with a specific Tag will also cause a copy of all Actors (e.g. a Trigger) with that Tag as their Event, and the way around, so that no Event-Tag pair is left incomplete.</value>
   </data>
   <data name="lblKeepWorldCons.Text" xml:space="preserve">
-    <value>If checked, connections between rooms will not be broken. If a physical path exists between room A and room B in a particular map and they were both copied, then a path will be ensured in the mixed map by copying more brushes as necessary.</value>
+    <value>If checked, connections between rooms will not be broken. If a physical path exists between room A and room B in a particular source map and both rooms were copied, then a path will be ensured in the destination map by copying extra brushes as necessary.</value>
   </data>
   <data name="lblExpandPortals.Text" xml:space="preserve">
     <value>If checked, Portal sheets will be expanded to prevent any sheet from not filling a gap completely. This happens in the normalized order that the Brushes were added, and will not cause additional bugs such as overlapping Portals.</value>
