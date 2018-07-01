@@ -19,6 +19,9 @@ namespace UnrealMapMixer
             this.z = z;
         }
 
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
         public Point3D(Point3D point) : this(point.x, point.y, point.z)
         { }
 

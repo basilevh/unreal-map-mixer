@@ -69,6 +69,15 @@ namespace UnrealMapMixer.Unreal
             return builder.ToString();
         }
 
+        public static string GenerateText(UnrealBrush brush)
+        {
+            var builder = new StringBuilder();
+
+            // TODO
+
+            return builder.ToString();
+        }
+
         /// <summary>
         /// Gets a property by the specified key.
         /// </summary>
@@ -101,6 +110,97 @@ namespace UnrealMapMixer.Unreal
             }
 
             return result;
+        }
+
+        /* Polygon format:
+         * ...
+         * [?] PolyFlags=...
+         * [?] Location=(X=...,Y=...,Z=...)
+         * [?] Rotation=([?]Pitch=...,[?]Yaw=...,[?]Roll=...)
+         * ...
+         * Begin Brush Name=...
+         *    Begin PolyList
+         *       Begin Polygon ...
+         *          ...
+         *          Normal   x,y,z
+         *          ...
+         *          Vertex   x,y,z
+         *          Vertex   x,y,z
+         *          ...
+         *       End Polygon
+         *       ...
+         *    End PolyList
+         * End Brush
+         */
+
+        // TODO account for MainScale, Rotation, PostScale
+
+        public static IEnumerable<Polygon> LoadPolygons(string text, Point3D origin)
+        {
+            List<Point3D> polyVerts = null;
+            Vector3D polyNormal = null;
+
+            var reader = new StringReader(text);
+            string line = reader.ReadLine();
+            while (line != null)
+            {
+                line = line.TrimStart();
+
+                if (line.StartsWith("Begin Polygon"))
+                {
+                    // Start parsing a new polygon
+                    polyVerts = new List<Point3D>();
+                }
+
+                else if (line.StartsWith("Normal "))
+                {
+                    // Assign this normal vector to the current polygon
+                    string[] coords = line.Substring("Normal ".Length).Trim().Split(',');
+                    if (double.TryParse(coords[0], out double x)
+                        && double.TryParse(coords[1], out double y)
+                        && double.TryParse(coords[2], out double z))
+                        polyNormal = new Vector3D(x, y, z, true);
+                    else
+                        Console.WriteLine("Error at line: " + line);
+                }
+
+                else if (line.StartsWith("Vertex ") && polyVerts != null)
+                {
+                    string[] coords = line.Substring("Vertex ".Length).Trim().Split(',');
+                    if (double.TryParse(coords[0], out double x)
+                        && double.TryParse(coords[1], out double y)
+                        && double.TryParse(coords[2], out double z)
+                        && polyVerts != null)
+                    {
+                        // Get the true world coordinates by adding the location offset
+                        x += origin.X;
+                        y += origin.Y;
+                        z += origin.Z;
+
+                        // Add this vertex to the current polygon
+                        var curVert = new Point3D(x, y, z);
+                        polyVerts.Add(curVert);
+                    }
+                    else
+                        Console.WriteLine("Error at line: " + line);
+                }
+
+                else if (line.StartsWith("End Polygon"))
+                {
+                    // Finished parsing this polygon, so yield it
+                    if (polyVerts != null && polyNormal != null)
+                    {
+                        yield return new Polygon(polyVerts, polyNormal);
+
+                        polyVerts = null;
+                        polyNormal = null;
+                    }
+                    else
+                        Console.WriteLine("Error while parsing polygon");
+                }
+
+                line = reader.ReadLine();
+            }
         }
     }
 }

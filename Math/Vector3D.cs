@@ -23,7 +23,8 @@ namespace UnrealMapMixer
         { }
 
         /// <summary>
-        /// Creates a copy of an existing vector, or creates a vector from the origin to the given point.
+        /// Copy constructor.
+        /// Creates a copy of an existing vector, or creates a new vector from the origin to the given point.
         /// </summary>
         public Vector3D(Point3D point) : this(point.X, point.Y, point.Z)
         { }

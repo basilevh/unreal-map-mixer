@@ -15,8 +15,14 @@ namespace UnrealMapMixer
             this.pt2 = pt2;
         }
 
-        public Line3D(Line3D line) : this(line.pt1, line.pt2)
-        { }
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        public Line3D(Line3D line)
+        {
+            pt1 = new Point3D(line.pt1);
+            pt2 = new Point3D(line.pt2);
+        }
 
         private Point3D pt1;
         private Point3D pt2;

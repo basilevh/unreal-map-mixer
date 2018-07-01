@@ -19,6 +19,9 @@ namespace UnrealMapMixer
             this.roll = roll;
         }
 
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
         public Rotation3D(Rotation3D rotation) : this(rotation.pitch, rotation.yaw, rotation.roll)
         { }
 

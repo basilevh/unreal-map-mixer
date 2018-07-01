@@ -32,8 +32,8 @@ namespace UnrealMapMixer
             title = map.title;
             author = map.author;
             song = map.song;
-            actors.AddRange(map.Actors.Select(a => a.Duplicate()));
-            brushes.AddRange(map.Brushes.Select(b => b.Duplicate()));
+            actors = map.actors.Select(a => a.Duplicate()).ToList();
+            brushes = map.brushes.Select(b => b.Duplicate()).ToList();
             actorCount = map.actorCount;
             brushCount = map.brushCount;
         }

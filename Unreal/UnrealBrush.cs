@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer
 {
@@ -35,12 +36,30 @@ namespace UnrealMapMixer
             edges = new List<Line3D>();
         }
 
+        protected UnrealBrush(UnrealBrush brush) : base(brush)
+        {
+            polyFlags = brush.polyFlags;
+            isInvisible = brush.isInvisible;
+            isPortal = brush.isPortal;
+            type = brush.type;
+            polygons = brush.polygons.Select(p => new Polygon(p)).ToList();
+            vertices = brush.vertices.Select(p => new Point3D(p)).ToList();
+            edges = brush.edges.Select(l => new Line3D(l)).ToList();
+        }
+        
+        protected UnrealBrush(string text) : base(text)
+        { }
+
+        /// <summary>
+        /// Creates a modifiable deep copy of this brush.
+        /// </summary>
+        public new UnrealBrush Duplicate() => new UnrealBrush(this);
+
         /// <summary>
         /// Creates a read-only instance of a brush.
         /// </summary>
-        /// <param name="text">Text representation of the brush</param>
-        protected UnrealBrush(string text) : base(text)
-        { }
+        /// <param name="text">T3D representation to be parsed</param>
+        public new static UnrealBrush FromText(string text) => new UnrealBrush(text);
 
         protected ulong polyFlags;
         protected bool isInvisible;
@@ -66,15 +85,20 @@ namespace UnrealMapMixer
 
         #region Text handling
 
-        private void loadText(string text)
+        protected override string generateText()
         {
-            loadText(text);
-            getVertices();
-            getEdges();
+            return T3DParser.GenerateText(this);
+        }
+
+        protected override void loadText(string text)
+        {
+            base.loadText(text);
 
             loadFlags(text);
             loadType(text);
             loadPolys(text);
+            loadVertices();
+            loadEdges();
         }
 
         private void loadFlags(string text)
@@ -96,7 +120,7 @@ namespace UnrealMapMixer
             // https://wiki.beyondunreal.com/Legacy:PolyFlags
             type = BrushType.Unknown;
 
-            if (actorClass == "Mover")
+            if (Class == "Mover")
                 type = BrushType.Mover;
             else
             {
@@ -118,98 +142,16 @@ namespace UnrealMapMixer
             }
         }
 
-        /* Polygon format:
-         * ...
-         * [?] PolyFlags=...
-         * [?] Location=(X=...,Y=...,Z=...)
-         * [?] Rotation=([?]Pitch=...,[?]Yaw=...,[?]Roll=...)
-         * ...
-         * Begin Brush Name=...
-         *    Begin PolyList
-         *       Begin Polygon ...
-         *          ...
-         *          Normal   x,y,z
-         *          ...
-         *          Vertex   x,y,z
-         *          Vertex   x,y,z
-         *          ...
-         *       End Polygon
-         *       ...
-         *    End PolyList
-         * End Brush
-         */
-
-        // TODO account for MainScale, Rotation, PostScale
-
         private void loadPolys(string text)
         {
-            polygons = new List<Polygon>();
-            List<Point3D> polyVerts = null;
-            Vector3D polyNormal = null;
-
-            var reader = new StringReader(text);
-            string line = reader.ReadLine();
-            while (line != null)
-            {
-                line = line.TrimStart();
-
-                if (line.StartsWith("Begin Polygon"))
-                {
-                    polyVerts = new List<Point3D>();
-                }
-                else if (line.StartsWith("Normal "))
-                {
-                    string[] coords = line.Substring("Normal ".Length).Trim().Split(',');
-                    double x, y, z;
-                    if (double.TryParse(coords[0], out x)
-                        && double.TryParse(coords[1], out y)
-                        && double.TryParse(coords[2], out z))
-                        polyNormal = new Vector3D(x, y, z, true);
-                    else
-                        Console.WriteLine("Error at line: " + line);
-                }
-                else if (line.StartsWith("Vertex ") && polyVerts != null)
-                {
-                    string[] coords = line.Substring("Vertex ".Length).Trim().Split(',');
-                    double x, y, z;
-                    if (double.TryParse(coords[0], out x)
-                        && double.TryParse(coords[1], out y)
-                        && double.TryParse(coords[2], out z)
-                        && polyVerts != null)
-                    {
-                        // Get the true world coordinates by adding the location offset
-                        x += location.X;
-                        y += location.Y;
-                        z += location.Z;
-                        // Add this vertex to the current polygon
-                        var curVert = new Point3D(x, y, z);
-                        polyVerts.Add(curVert);
-                    }
-                    else
-                        Console.WriteLine("Error at line: " + line);
-                }
-                else if (line.StartsWith("End Polygon"))
-                {
-                    // Finished parsing this polygon, so add it
-                    if (polyVerts != null && polyNormal != null)
-                    {
-                        polygons.Add(new Polygon(polyVerts, polyNormal));
-                        polyVerts = null;
-                        polyNormal = null;
-                    }
-                    else
-                        Console.WriteLine("Error while parsing polygon");
-                }
-
-                line = reader.ReadLine();
-            }
+            polygons = T3DParser.LoadPolygons(text, Location).ToList();
         }
 
         #endregion
 
         #region Geometry
 
-        private void getVertices()
+        private void loadVertices()
         {
             vertices = new List<Point3D>();
             foreach (var poly in polygons)
@@ -223,7 +165,7 @@ namespace UnrealMapMixer
             }
         }
 
-        private void getEdges()
+        private void loadEdges()
         {
             edges = new List<Line3D>();
             foreach (var poly in polygons)
