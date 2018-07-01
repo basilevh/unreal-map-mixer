@@ -47,5 +47,149 @@ namespace UnrealMapMixer.Properties {
                 this["ExcludedActors"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public decimal SolidProb {
+            get {
+                return ((decimal)(this["SolidProb"]));
+            }
+            set {
+                this["SolidProb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public decimal SemiSolidProb {
+            get {
+                return ((decimal)(this["SemiSolidProb"]));
+            }
+            set {
+                this["SemiSolidProb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
+        public decimal NonSolidProb {
+            get {
+                return ((decimal)(this["NonSolidProb"]));
+            }
+            set {
+                this["NonSolidProb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public decimal SubtractProb {
+            get {
+                return ((decimal)(this["SubtractProb"]));
+            }
+            set {
+                this["SubtractProb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public decimal MoverProb {
+            get {
+                return ((decimal)(this["MoverProb"]));
+            }
+            set {
+                this["MoverProb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
+        public decimal LightProb {
+            get {
+                return ((decimal)(this["LightProb"]));
+            }
+            set {
+                this["LightProb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public decimal OtherProb {
+            get {
+                return ((decimal)(this["OtherProb"]));
+            }
+            set {
+                this["OtherProb"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Mode {
+            get {
+                return ((int)(this["Mode"]));
+            }
+            set {
+                this["Mode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ExcludeInvisible {
+            get {
+                return ((bool)(this["ExcludeInvisible"]));
+            }
+            set {
+                this["ExcludeInvisible"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ExcludePortal {
+            get {
+                return ((bool)(this["ExcludePortal"]));
+            }
+            set {
+                this["ExcludePortal"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ExcludeZone {
+            get {
+                return ((bool)(this["ExcludeZone"]));
+            }
+            set {
+                this["ExcludeZone"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ExcludeMore {
+            get {
+                return ((bool)(this["ExcludeMore"]));
+            }
+            set {
+                this["ExcludeMore"] = value;
+            }
+        }
     }
 }

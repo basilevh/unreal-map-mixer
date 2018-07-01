@@ -14,6 +14,8 @@ namespace UnrealMapMixer
 {
     public partial class frmMain : Form
     {
+        public static string UTPath;
+
         public frmMain()
         {
             InitializeComponent();
@@ -23,7 +25,6 @@ namespace UnrealMapMixer
         }
 
         private OpenFileDialog inputOpenDialog;
-        private SaveFileDialog outputSaveDialog;
         private Dictionary<string, UnrealMap> sourceMaps;
 
         private void initDialogs()
@@ -34,19 +35,11 @@ namespace UnrealMapMixer
                 Title = "Select source file(s)",
                 Multiselect = true
             };
-            outputSaveDialog = new SaveFileDialog
-            {
-                Filter = "Unreal Text (T3D) File (*.t3d)|*.t3d",
-                Title = "Specify destination file"
-            };
 
             // Set game folder if found
-            string utPath = FindUTPath();
-            if (utPath != null)
-            {
-                inputOpenDialog.InitialDirectory = utPath;
-                outputSaveDialog.InitialDirectory = utPath;
-            }
+            UTPath = FindUTPath();
+            if (UTPath != null)
+                inputOpenDialog.InitialDirectory = UTPath;
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -56,9 +49,12 @@ namespace UnrealMapMixer
 
         private void loadState()
         {
+            var settings = Properties.Settings.Default;
+
+            // Source files
             lvwSourceFiles.Items.Clear();
-            if (Properties.Settings.Default.InputFiles != null)
-                foreach (string path in Properties.Settings.Default.InputFiles)
+            if (settings.InputFiles != null)
+                foreach (string path in settings.InputFiles)
                     if (File.Exists(path))
                     {
                         string text = File.ReadAllText(path);
@@ -68,16 +64,60 @@ namespace UnrealMapMixer
                             lvwSourceFiles.Items.Add(createItemFromFile(path));
                         }
                     }
-            txtExcludeActors.Lines = Properties.Settings.Default.ExcludedActors?.Cast<string>().ToArray();
+
+            // Intelligence
+            radOrdered.Checked = (settings.Mode == 0);
+            radShuffled.Checked = (settings.Mode == 1);
+            radSmartClosed.Checked = (settings.Mode == 2);
+            radSmartOpen.Checked = (settings.Mode == 3);
+
+            // Probabilities
+            numSolid.Value = settings.SolidProb;
+            numSemiSolid.Value = settings.SemiSolidProb;
+            numNonSolid.Value = settings.NonSolidProb;
+            numSubtract.Value = settings.SubtractProb;
+            numMover.Value = settings.MoverProb;
+            numLight.Value = settings.LightProb;
+            numOther.Value = settings.OtherProb;
+
+            // Excluded actors
+            chkExInvis.Checked = settings.ExcludeInvisible;
+            chkExPortal.Checked = settings.ExcludePortal;
+            chkExZoneInfo.Checked = settings.ExcludeZone;
+            chkExMore.Checked = settings.ExcludeMore;
+            txtExcludeActors.Lines = settings.ExcludedActors?.Cast<string>().ToArray();
         }
 
         private void saveState()
         {
-            Properties.Settings.Default.InputFiles = new StringCollection();
-            Properties.Settings.Default.InputFiles.AddRange(lvwSourceFiles.Items.Cast<ListViewItem>().Select(i => i.Text).ToArray());
-            Properties.Settings.Default.ExcludedActors = new StringCollection();
-            Properties.Settings.Default.ExcludedActors.AddRange(txtExcludeActors.Lines);
-            Properties.Settings.Default.Save();
+            var settings = Properties.Settings.Default;
+
+            // Source files
+            settings.InputFiles = new StringCollection();
+            settings.InputFiles.AddRange(lvwSourceFiles.Items.Cast<ListViewItem>().Select(i => i.Text).ToArray());
+
+            // Intelligence
+            settings.Mode = (radOrdered.Checked ? 0 : radShuffled.Checked ? 1
+                : radSmartClosed.Checked ? 2 : 3);
+
+            // Probabilities
+            settings.SolidProb = numSolid.Value;
+            settings.SemiSolidProb = numSemiSolid.Value;
+            settings.NonSolidProb = numNonSolid.Value;
+            settings.SubtractProb = numSubtract.Value;
+            settings.MoverProb = numMover.Value;
+            settings.LightProb = numLight.Value;
+            settings.OtherProb = numOther.Value;
+
+            // Excluded actors
+            settings.ExcludeInvisible = chkExInvis.Checked;
+            settings.ExcludePortal = chkExPortal.Checked;
+            settings.ExcludeZone = chkExZoneInfo.Checked;
+            settings.ExcludeMore = chkExMore.Checked;
+            settings.ExcludedActors = new StringCollection();
+            settings.ExcludedActors.AddRange(txtExcludeActors.Lines);
+
+            settings.Save();
         }
 
         private ListViewItem createItemFromFile(string path)
@@ -132,16 +172,9 @@ namespace UnrealMapMixer
                 ExcludeMoreNames = txtExcludeActors.Lines.Where(s => s.Length != 0)
             };
 
-            // Perform mix
-            var result = mixer.Mix(mixParams);
-
-            // Show layout
-            var layoutForm = new frmMapLayout(result);
+            // Show layout form (responsible for starting and saving the mix)
+            var layoutForm = new frmMapLayout(mixer, mixParams);
             layoutForm.Show();
-
-            // Save
-            if (outputSaveDialog.ShowDialog() == DialogResult.OK)
-                File.WriteAllText(outputSaveDialog.FileName, result.Text);
         }
 
         private void btnAdd_Click(object sender, EventArgs e)

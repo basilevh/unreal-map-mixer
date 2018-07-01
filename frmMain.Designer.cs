@@ -103,6 +103,11 @@
             // 
             this.numSolid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numSolid.DecimalPlaces = 1;
+            this.numSolid.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numSolid.Location = new System.Drawing.Point(194, 19);
             this.numSolid.Name = "numSolid";
             this.numSolid.Size = new System.Drawing.Size(60, 20);
@@ -117,6 +122,11 @@
             // 
             this.numLight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numLight.DecimalPlaces = 1;
+            this.numLight.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numLight.Location = new System.Drawing.Point(194, 149);
             this.numLight.Name = "numLight";
             this.numLight.Size = new System.Drawing.Size(60, 20);
@@ -164,6 +174,11 @@
             // 
             this.numNonSolid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numNonSolid.DecimalPlaces = 1;
+            this.numNonSolid.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numNonSolid.Location = new System.Drawing.Point(194, 71);
             this.numNonSolid.Name = "numNonSolid";
             this.numNonSolid.Size = new System.Drawing.Size(60, 20);
@@ -187,6 +202,11 @@
             // 
             this.numSemiSolid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numSemiSolid.DecimalPlaces = 1;
+            this.numSemiSolid.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numSemiSolid.Location = new System.Drawing.Point(194, 45);
             this.numSemiSolid.Name = "numSemiSolid";
             this.numSemiSolid.Size = new System.Drawing.Size(60, 20);
@@ -210,6 +230,11 @@
             // 
             this.numMover.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numMover.DecimalPlaces = 1;
+            this.numMover.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numMover.Location = new System.Drawing.Point(194, 123);
             this.numMover.Name = "numMover";
             this.numMover.Size = new System.Drawing.Size(60, 20);
@@ -233,6 +258,11 @@
             // 
             this.numSubtract.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numSubtract.DecimalPlaces = 1;
+            this.numSubtract.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numSubtract.Location = new System.Drawing.Point(194, 97);
             this.numSubtract.Name = "numSubtract";
             this.numSubtract.Size = new System.Drawing.Size(60, 20);
@@ -256,6 +286,11 @@
             // 
             this.numOther.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numOther.DecimalPlaces = 1;
+            this.numOther.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numOther.Location = new System.Drawing.Point(194, 175);
             this.numOther.Name = "numOther";
             this.numOther.Size = new System.Drawing.Size(60, 20);
