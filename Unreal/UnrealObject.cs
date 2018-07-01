@@ -47,13 +47,16 @@ namespace UnrealMapMixer.Unreal
 
         protected readonly bool isReadOnly;
         private string text;
-        private bool textDirty; // whether 'text' must be updated before being returned
+        protected bool textDirty; // whether 'text' must be updated before being returned
 
+        /// <summary>
+        /// The file content for this map. This can be either the original text or newly generated text.
+        /// </summary>
         public string Text
         {
             get
             {
-                if (textDirty)
+                if (!isReadOnly && textDirty)
                 {
                     text = generateText();
                     textDirty = false;

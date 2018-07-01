@@ -33,15 +33,13 @@ namespace UnrealMapMixer
 
         public bool ApproxEquals(Line3D other, double absTol)
         {
-            // Use squared distances for performance
-            double atolSq = absTol * absTol;
             return
                 // Check for equal endpoints
-                ((pt1.DistSquaredTo(other.pt1) < atolSq
-                && pt2.DistSquaredTo(other.pt2) < atolSq))
+                (pt1.ApproxEquals(other.pt1, absTol)
+                && pt2.ApproxEquals(other.pt2, absTol))
                 // Check for reversed endpoints
-                || (pt1.DistSquaredTo(other.pt2) < atolSq
-                && pt2.DistSquaredTo(other.pt1) < atolSq);
+                || (pt1.ApproxEquals(other.pt2, absTol)
+                && pt2.ApproxEquals(other.pt1, absTol));
         }
     }
 }

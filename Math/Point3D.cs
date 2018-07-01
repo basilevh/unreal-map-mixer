@@ -86,5 +86,12 @@ namespace UnrealMapMixer
         {
             return DistanceTo(other.x, other.y, other.z);
         }
+
+        public bool ApproxEquals(Point3D other, double absTol)
+        {
+            // Use squared distances for performance
+            double atolSq = absTol * absTol;
+            return (DistSquaredTo(other) < atolSq);
+        }
     }
 }

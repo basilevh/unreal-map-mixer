@@ -2,6 +2,10 @@
 bin/*
 obj/*
 .vs/*
+packages/*
+TestResults/*
+UnrealMapMixerTests/bin/*
+UnrealMapMixerTests/obj/*
 
 # Include .gitignore
 !.gitignore

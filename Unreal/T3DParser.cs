@@ -8,6 +8,9 @@ using System.Text;
 
 namespace UnrealMapMixer.Unreal
 {
+    /// <summary>
+    /// Utility class for all direct I/O with T3D text representations.
+    /// </summary>
     public static class T3DParser
     {
         /* T3D Map Format:
@@ -108,6 +111,16 @@ namespace UnrealMapMixer.Unreal
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Extracts the geometry part from a T3D representation of a brush.
+        /// </summary>
+        public static string GetGeometryText(string text)
+        {
+            int start = text.IndexOf("Begin Brush");
+            int end = text.IndexOf("End Brush") + "End Brush".Length;
+            return text.Substring(start, end - start);
         }
 
         /* Polygon format (? means not always present):
@@ -250,8 +263,8 @@ namespace UnrealMapMixer.Unreal
             builder.AppendLine("Begin Actor Class=Brush Name=" + brush.Name);
             // Add all properties
             builder.AppendLine(generateProperties(brush));
-            // Add brush-specific part
-            builder.AppendLine(generateBrushText(brush));
+            // Add geometry part
+            builder.AppendLine(brush.GeometryText);
             // Add footer
             builder.AppendLine("End Actor");
 
@@ -264,7 +277,7 @@ namespace UnrealMapMixer.Unreal
         private static string generateProperties(UnrealActor actor)
         {
             var builder = new StringBuilder();
-            
+
             // Add all properties
             foreach (var property in actor.Properties)
                 builder.AppendLine("\t" + property.Key + "=" + property.Value);
@@ -273,11 +286,43 @@ namespace UnrealMapMixer.Unreal
         }
 
         /// <summary>
-        /// Generates the brush-specific part of the T3D representation of a brush instance.
+        /// Modifies a T3D geometry representation and changes all matching vertices to the desired location.
         /// </summary>
-        private static string generateBrushText(UnrealBrush brush)
+        public static string MoveVertex(string geometryText, Point3D from, Point3D to, double absTol)
         {
+            string newCoords = T3DFormatter.GetVertex(to);
+            var reader = new StringReader(geometryText);
+            var builder = new StringBuilder();
+            string line = reader.ReadLine();
 
+            while (line != null)
+            {
+                var curVert = parseVertex(line);
+                if (curVert != null && curVert.ApproxEquals(from, absTol))
+                    // Replace this line with the new vertex
+                    line = "             Vertex   " + newCoords;
+
+                builder.AppendLine(line);
+                line = reader.ReadLine();
+            }
+
+            return builder.ToString();
+        }
+
+        private static Point3D parseVertex(string line)
+        {
+            int vertexIndex = line.IndexOf("Vertex ");
+            if (vertexIndex != -1)
+            {
+                string[] coords = line.Substring(vertexIndex + "Vertex ".Length).Trim().Split(',');
+                if (double.TryParse(coords[0], out double x)
+                            && double.TryParse(coords[1], out double y)
+                            && double.TryParse(coords[2], out double z))
+                {
+                    return new Point3D(x, y, z);
+                }
+            }
+            return null;
         }
     }
 }

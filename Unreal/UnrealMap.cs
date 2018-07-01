@@ -52,6 +52,7 @@ namespace UnrealMapMixer
         /// <param name="text">T3D file contents to be parsed</param>
         public static UnrealMap FromText(string text) => new UnrealMap(text);
 
+        private UnrealActor levelInfo;
         private string title;
         private string author;
         private string song;
@@ -60,14 +61,62 @@ namespace UnrealMapMixer
         private int actorCount;
         private int brushCount;
 
-        /// <summary>
-        /// The file content for this map. This can be either the original text or newly generated text.
-        /// </summary>
-        public string Title => title;
+        public string Title
+        {
+            get
+            {
+                return title;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new InvalidOperationException("This map cannot be modified because it is read-only");
+                else
+                {
+                    title = value;
+                    levelInfo.SetProperty("Title", value);
+                    textDirty = true;
+                }
+            }
+        }
 
-        public string Author => author;
+        public string Author
+        {
+            get
+            {
+                return author;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new InvalidOperationException("This map cannot be modified because it is read-only");
+                else
+                {
+                    author = value;
+                    levelInfo.SetProperty("Author", value);
+                    textDirty = true;
+                }
+            }
+        }
 
-        public string Song => song;
+        public string Song
+        {
+            get
+            {
+                return song;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new InvalidOperationException("This map cannot be modified because it is read-only");
+                else
+                {
+                    title = value;
+                    levelInfo.SetProperty("Song", value);
+                    textDirty = true;
+                }
+            }
+        }
 
         public IEnumerable<UnrealActor> Actors => actors;
 
@@ -80,7 +129,7 @@ namespace UnrealMapMixer
         public void AddActor(UnrealActor actor)
         {
             if (isReadOnly)
-                throw new InvalidOperationException("This map cannot be modified because it is a source file");
+                throw new InvalidOperationException("This map cannot be modified because it is read-only");
             else
             {
                 if (actor is UnrealBrush)
@@ -101,7 +150,12 @@ namespace UnrealMapMixer
 
         public void RemoveTrappedPlayerStarts()
         {
-            // TODO
+            if (isReadOnly)
+                throw new InvalidOperationException("This map cannot be modified because it is read-only");
+            else
+            {
+                // TODO
+            }
         }
 
         public Point3D GetCenterOfGravity()
@@ -116,7 +170,7 @@ namespace UnrealMapMixer
 
         protected override string generateText()
         {
-            return T3DParser.GenerateText(actors);
+            return T3DParser.GenerateText(this);
         }
 
         protected override void loadText(string text)
@@ -128,7 +182,7 @@ namespace UnrealMapMixer
 
         private void loadInfo()
         {
-            var levelInfo = Actors.Where(a => a.Class == "LevelInfo").FirstOrDefault();
+            levelInfo = Actors.Where(a => a.Class == "LevelInfo").FirstOrDefault();
             if (levelInfo != null)
             {
                 title = levelInfo.GetProperty("Title");

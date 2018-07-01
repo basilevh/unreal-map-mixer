@@ -61,13 +61,14 @@ namespace UnrealMapMixer
         /// <param name="text">T3D representation to be parsed</param>
         public new static UnrealBrush FromText(string text) => new UnrealBrush(text);
 
-        protected ulong polyFlags;
-        protected bool isInvisible;
-        protected bool isPortal;
-        protected BrushType type;
-        protected List<Polygon> polygons;
-        protected List<Point3D> vertices;
-        protected List<Line3D> edges;
+        private ulong polyFlags;
+        private bool isInvisible;
+        private bool isPortal;
+        private BrushType type;
+        private string geometryText;
+        private List<Polygon> polygons;
+        private List<Point3D> vertices;
+        private List<Line3D> edges;
 
         public ulong PolyFlags => polyFlags;
 
@@ -76,6 +77,8 @@ namespace UnrealMapMixer
         public bool IsPortal => isPortal;
 
         public BrushType Type => type;
+
+        public string GeometryText => geometryText;
 
         public IEnumerable<Polygon> Polygons => polygons;
 
@@ -92,11 +95,16 @@ namespace UnrealMapMixer
 
         protected override void loadText(string text)
         {
+            // Load properties
             base.loadText(text);
-
             loadFlags(text);
             loadType(text);
-            loadPolys(text);
+
+            // Load geometry
+            geometryText = T3DParser.GetGeometryText(text);
+            polygons = T3DParser.LoadPolygons(geometryText, Location).ToList();
+
+            // Process geometry
             loadVertices();
             loadEdges();
         }
@@ -142,11 +150,6 @@ namespace UnrealMapMixer
             }
         }
 
-        private void loadPolys(string text)
-        {
-            polygons = T3DParser.LoadPolygons(text, Location).ToList();
-        }
-
         #endregion
 
         #region Geometry
@@ -159,8 +162,8 @@ namespace UnrealMapMixer
                 foreach (var vertex in poly.Vertices)
                 {
                     // Add this vertex to the total list of vertices, if not already present
-                    if (vertices.All(v => v.DistSquaredTo(vertex) > MinVertexDistSq))
-                        vertices.Add(vertex);
+                    if (!vertices.Any(v => v.ApproxEquals(vertex, MinVertexDist)))
+                        vertices.Add(new Point3D(vertex));
                 }
             }
         }
@@ -174,9 +177,19 @@ namespace UnrealMapMixer
                 {
                     // Add this edge to the total list of edges, if not already present
                     if (!edges.Any(e => e.ApproxEquals(edge, MinVertexDist)))
-                        edges.Add(edge);
+                        edges.Add(new Line3D(edge));
                 }
             }
+        }
+
+        public void MoveVertex(Point3D from, Point3D to)
+        {
+            geometryText = T3DParser.MoveVertex(geometryText, from, to, MinVertexDist);
+
+            // Reload and process geometry
+            polygons = T3DParser.LoadPolygons(geometryText, Location).ToList();
+            loadVertices();
+            loadEdges();
         }
 
         /// <returns>Whether this brush has at least one slanted surface.</returns>
@@ -194,20 +207,20 @@ namespace UnrealMapMixer
 
         public double GetXMax() => vertices.Max(v => v.X);
 
-        public double GetYMin() => vertices.Min(v => v.X);
+        public double GetYMin() => vertices.Min(v => v.Y);
 
-        public double GetYMax() => vertices.Max(v => v.X);
+        public double GetYMax() => vertices.Max(v => v.Y);
 
-        public double GetZMin() => vertices.Min(v => v.X);
+        public double GetZMin() => vertices.Min(v => v.Z);
 
-        public double GetZMax() => vertices.Max(v => v.X);
+        public double GetZMax() => vertices.Max(v => v.Z);
 
         /// <returns>
         /// Whether this brush overlaps with or touches another brush,
         /// i.e. at least one point is common. If the result is unknown,
         /// null is returned.
         /// </returns>
-        public bool? Overlaps(UnrealBrush other)
+        public bool? OverlapsWith(UnrealBrush other)
         {
             if (IsCuboid())
             {

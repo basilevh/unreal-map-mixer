@@ -16,9 +16,9 @@ namespace UnrealMapMixer
         {
             if (text.StartsWith("Begin Actor Class=Brush ")
                 || text.StartsWith("Begin Actor Class=Mover "))
-                return new UnrealBrush(text);
+                return UnrealBrush.FromText(text);
             else
-                return new UnrealActor(text);
+                return UnrealActor.FromText(text);
         }
     }
 }
