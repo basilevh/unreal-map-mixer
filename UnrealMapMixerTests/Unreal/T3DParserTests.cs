@@ -24,7 +24,7 @@ namespace UnrealMapMixer.Unreal.Tests
             var vertexFrom = new Point3D(0.0, 256.0, -16.0);
             var vertexTo = new Point3D(32.0, 128.0, -32.0);
 
-            string actual = T3DParser.MoveVertex(textFrom, vertexFrom, vertexTo, 1e-3);
+            string actual = T3DParser.TranslateVertex(textFrom, vertexFrom, vertexTo, 1e-3);
             Assert.AreEqual(textTo, actual);
         }
     }

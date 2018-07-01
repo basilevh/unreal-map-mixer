@@ -51,6 +51,16 @@ namespace UnrealMapMixer.Unreal
         public new UnrealBrush Duplicate() => new UnrealBrush(this);
 
         /// <summary>
+        /// Creates a copy of this actor, translated by the given offset.
+        /// </summary>
+        public new UnrealBrush Duplicate(Vector3D translateOffset)
+        {
+            var result = new UnrealBrush(this);
+            result.Translate(translateOffset);
+            return result;
+        }
+
+        /// <summary>
         /// Creates a read-only instance of a brush.
         /// </summary>
         /// <param name="text">T3D representation to be parsed</param>
@@ -107,13 +117,7 @@ namespace UnrealMapMixer.Unreal
 
             // Load geometry
             geometryText = T3DParser.GetGeometryText(text);
-            polygons = T3DParser.LoadPolygons(geometryText, Location).ToList();
-
-            // TODO: apply rotation and scaling
-
-            // Process geometry
-            loadVertices();
-            loadEdges();
+            processGeometry();
         }
 
         private void loadFlags()
@@ -128,6 +132,8 @@ namespace UnrealMapMixer.Unreal
                 isInvisible = ((polyFlags & 1 << 1) != 0);
                 isPortal = ((polyFlags & 1 << 26) != 0);
             }
+
+            // TODO: include individual polygons as well (round average?)
         }
 
         private void loadType()
@@ -171,6 +177,14 @@ namespace UnrealMapMixer.Unreal
 
         #region Geometry
 
+        private void processGeometry()
+        {
+            // TODO: apply rotation and scaling
+            polygons = T3DParser.LoadPolygons(geometryText, Location).ToList();
+            loadVertices();
+            loadEdges();
+        }
+
         private void loadVertices()
         {
             vertices = new List<Point3D>();
@@ -201,12 +215,11 @@ namespace UnrealMapMixer.Unreal
 
         public void MoveVertex(Point3D from, Point3D to)
         {
-            geometryText = T3DParser.MoveVertex(geometryText, from, to, MinVertexDist);
+            if (isReadOnly)
+                throw new InvalidOperationException("This map cannot be modified because it is read-only");
 
-            // Reload and process geometry
-            polygons = T3DParser.LoadPolygons(geometryText, Location).ToList();
-            loadVertices();
-            loadEdges();
+            geometryText = T3DParser.TranslateVertex(geometryText, from, to, MinVertexDist);
+            processGeometry();
         }
 
         /// <returns>Whether this brush has at least one slanted surface.</returns>

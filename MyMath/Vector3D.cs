@@ -31,5 +31,8 @@ namespace UnrealMapMixer.MyMath
         /// </summary>
         public Vector3D(Point3D point) : this(point.X, point.Y, point.Z)
         { }
+
+        public Vector3D() : this(0.0, 0.0, 0.0)
+        { }
     }
 }

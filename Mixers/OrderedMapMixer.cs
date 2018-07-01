@@ -16,8 +16,6 @@ namespace UnrealMapMixer.Mixers
     /// </summary>
     public class OrderedMapMixer : MapMixer
     {
-        private static Random rnd = new Random();
-
         public OrderedMapMixer(IEnumerable<UnrealMap> maps) : base(maps)
         { }
 
@@ -28,14 +26,25 @@ namespace UnrealMapMixer.Mixers
             // Get brush-rank pairs, actors and other features
             var brushRanks = new List<Tuple<UnrealBrush, double>>();
             var allActors = new List<UnrealActor>(); // excluding brushes
-            var cogDict = new Dictionary<UnrealMap, Point3D>();
             foreach (var map in maps)
-            { 
-                brushRanks.AddRange(map.Brushes.Select(
+            {
+                Vector3D offset;
+                if (mixParams.TranslateCommonCOG)
+                {
+                    var cog = map.CalcCenterOfGravity();
+                    offset = new Vector3D(-cog.X, -cog.Y, -cog.Z);
+                }
+                else
+                    offset = new Vector3D();
+
+                brushRanks.AddRange(map.Brushes
+                    .Select(
                         (b, i) => new Tuple<UnrealBrush, double>
-                        (b, (double)i / map.BrushCount)));
-                allActors.AddRange(map.Actors.Where(a => !(a is UnrealBrush)));
-                cogDict[map] = map.GetCenterOfGravity();
+                        (b.Duplicate(offset), (double)i / map.BrushCount)));
+
+                allActors.AddRange(map.Actors
+                    .Where(a => !(a is UnrealBrush))
+                    .Select(a => a.Duplicate(offset)));
             }
 
             // Merge all brushes
@@ -65,7 +74,7 @@ namespace UnrealMapMixer.Mixers
                     case BrushType.Mover: prob = mixParams.MoverProb; break;
                     default: prob = 0.0; break;
                 }
-                
+
                 if (randExp(prob))
                     mixBrushes.Add(brush);
             }
@@ -81,9 +90,8 @@ namespace UnrealMapMixer.Mixers
                     continue;
 
                 // Get probability
-                // TODO: not all lights are of class 'Light'
                 double prob;
-                if (actor.Class == "Light")
+                if (actor.Class.Contains("Light"))
                     prob = mixParams.LightProb;
                 else
                     prob = mixParams.OtherProb;
@@ -104,10 +112,5 @@ namespace UnrealMapMixer.Mixers
 
             return destMap;
         }
-
-        /// <summary>
-        /// Runs a random experiment with a boolean outcome.
-        /// </summary>
-        private static bool randExp(double probTrue) => (rnd.NextDouble() < probTrue);
     }
 }

@@ -162,7 +162,7 @@ namespace UnrealMapMixer.Unreal
             }
         }
 
-        public Point3D GetCenterOfGravity()
+        public Point3D CalcCenterOfGravity()
         {
             // TODO
             return new Point3D(0.0, 0.0, 0.0);

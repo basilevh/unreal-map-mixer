@@ -23,6 +23,8 @@ namespace UnrealMapMixer.Mixers
                 "VacuumZone", "WarpZoneInfo", "WaterZone"
             });
 
+        protected static Random rnd = new Random();
+
         public MapMixer(IEnumerable<UnrealMap> maps)
         {
             this.maps = maps;
@@ -31,5 +33,10 @@ namespace UnrealMapMixer.Mixers
         protected IEnumerable<UnrealMap> maps;
 
         public abstract UnrealMap Mix(MapMixParams mixParams);
+
+        /// <summary>
+        /// Runs a random experiment with a boolean outcome.
+        /// </summary>
+        protected static bool randExp(double probTrue) => (rnd.NextDouble() < probTrue);
     }
 }

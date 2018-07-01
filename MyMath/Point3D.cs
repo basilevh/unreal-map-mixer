@@ -93,5 +93,11 @@ namespace UnrealMapMixer.MyMath
             double atolSq = absTol * absTol;
             return (DistSquaredTo(other) < atolSq);
         }
+
+        public bool IsZero() => (x == 0.0 && y == 0.0 && z == 0.0);
+
+        public Point3D Add(Vector3D other) => new Point3D(x + other.x, y + other.y, z + other.z);
+
+        public Point3D Subtract(Vector3D other) => new Point3D(x - other.x, y - other.y, z - other.z);
     }
 }

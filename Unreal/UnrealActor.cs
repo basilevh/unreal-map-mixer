@@ -39,6 +39,17 @@ namespace UnrealMapMixer.Unreal
         public UnrealActor Duplicate() => new UnrealActor(this);
 
         /// <summary>
+        /// Creates a copy of this actor, translated by the given offset.
+        /// </summary>
+        public UnrealActor Duplicate(Vector3D translateOffset)
+        {
+            var result = new UnrealActor(this);
+            if (!translateOffset.IsZero())
+                result.Translate(translateOffset);
+            return result;
+        }
+
+        /// <summary>
         /// Creates a read-only instance of an actor.
         /// </summary>
         /// <param name="text">T3D representation to be parsed</param>
@@ -113,5 +124,13 @@ namespace UnrealMapMixer.Unreal
         }
 
         #endregion
+
+        public void Translate(Vector3D offset)
+        {
+            if (isReadOnly)
+                throw new InvalidOperationException("This map cannot be modified because it is read-only");
+
+            location = location.Add(offset);
+        }
     }
 }

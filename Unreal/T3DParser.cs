@@ -292,7 +292,7 @@ namespace UnrealMapMixer.Unreal
         /// <summary>
         /// Modifies a T3D geometry representation and changes all matching vertices to the desired location.
         /// </summary>
-        public static string MoveVertex(string geometryText, Point3D from, Point3D to, double absTol)
+        public static string TranslateVertex(string geometryText, Point3D from, Point3D to, double absTol)
         {
             string newCoords = T3DFormatter.GetVertex(to);
             var reader = new StringReader(geometryText);
@@ -313,12 +313,38 @@ namespace UnrealMapMixer.Unreal
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Modifies a T3D geometry representation and translates all vertices by a common offset (i.e. moves the brush).
+        /// </summary>
+        /*public static string TranslateAllVertices(string geometryText, Vector3D offset)
+        {
+            var reader = new StringReader(geometryText);
+            var builder = new StringBuilder();
+            string line = reader.ReadLine();
+
+            while (line != null)
+            {
+                var curVert = parseVertex(line);
+                if (curVert != null)
+                {
+                    var newCoords = T3DFormatter.GetVertex(curVert.Add(offset));
+                    // Replace this line with the new vertex
+                    line = "             Vertex   " + newCoords;
+                }
+
+                builder.AppendLine(line);
+                line = reader.ReadLine();
+            }
+
+            return builder.ToString();
+        }*/
+
         private static Point3D parseVertex(string line)
         {
-            int vertexIndex = line.IndexOf("Vertex ");
-            if (vertexIndex != -1)
+            int start = line.IndexOf("Vertex ");
+            if (start != -1)
             {
-                string[] coords = line.Substring(vertexIndex + "Vertex ".Length).Trim().Split(',');
+                string[] coords = line.Substring(start + "Vertex ".Length).Trim().Split(',');
                 if (double.TryParse(coords[0], out double x)
                             && double.TryParse(coords[1], out double y)
                             && double.TryParse(coords[2], out double z))
