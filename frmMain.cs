@@ -181,6 +181,11 @@ namespace UnrealMapMixer
             }
         }
 
+        private void lvwSourceFiles_DoubleClick(object sender, EventArgs e)
+        {
+            btnView_Click(sender, e);
+        }
+
         private static string FindUTPath()
         {
             var drives = System.IO.DriveInfo.GetDrives();

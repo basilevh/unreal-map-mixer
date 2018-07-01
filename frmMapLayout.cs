@@ -17,6 +17,7 @@ namespace UnrealMapMixer
         {
             InitializeComponent();
             this.map = map;
+            Text = map.Title + " - Layout Top View";
 
             drawer = new MapDrawer(map);
             drawLayout();
@@ -28,16 +29,27 @@ namespace UnrealMapMixer
         private UnrealMap map;
         private MapDrawer drawer;
 
-        private void frmMapLayout_ResizeEnd(object sender, EventArgs e)
-        {
-            drawLayout();
-        }
-
         private void drawLayout()
         {
             var bmp = new Bitmap(picLayout.Width, picLayout.Height);
             drawer.DrawLayout(Graphics.FromImage(bmp), picLayout.Width, picLayout.Height);
             picLayout.Image = bmp;
+        }
+
+        private void frmMapLayout_ResizeEnd(object sender, EventArgs e)
+        {
+            drawLayout();
+        }
+
+        private void frmMapLayout_SizeChanged(object sender, EventArgs e)
+        {
+            tmrUpdate.Start();
+        }
+
+        private void tmrUpdate_Tick(object sender, EventArgs e)
+        {
+            tmrUpdate.Stop();
+            drawLayout();
         }
     }
 }

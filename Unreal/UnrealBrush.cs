@@ -79,8 +79,8 @@ namespace UnrealMapMixer
 
         public Scale3D PostScale => postScale;
 
-        public bool IsScaled => (mainScale.X != 1.0 || mainScale.Y != 1.0 || mainScale.Z != 1.0
-            || postScale.X != 1.0 || postScale.Y != 1.0 || postScale.Z != 1.0);
+        public bool IsScaled => (mainScale.X != 1.0 || mainScale.Y != 1.0 || mainScale.Z != 1.0 || mainScale.SheerRate != 0.0
+            || postScale.X != 1.0 || postScale.Y != 1.0 || postScale.Z != 1.0 || postScale.SheerRate != 0.0);
 
         public string GeometryText => geometryText;
 
@@ -159,7 +159,12 @@ namespace UnrealMapMixer
 
         private void loadScale()
         {
-            // TODO
+            string value = GetProperty("MainScale");
+            if (value != null)
+                mainScale = Scale3D.FromProperty(value);
+            value = GetProperty("PostScale");
+            if (value != null)
+                postScale = Scale3D.FromProperty(value);
         }
 
         #endregion

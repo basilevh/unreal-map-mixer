@@ -11,7 +11,7 @@ namespace UnrealMapMixer.MyMath
     }
 
     /// <summary>
-    /// Immutable class that represents scaling information in a three-dimensional space.
+    /// Immutable class that represents scaling and sheering information in a three-dimensional space.
     /// </summary>
     public class Scale3D : Vector3D
     {
