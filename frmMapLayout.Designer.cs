@@ -57,8 +57,8 @@
             this.lblWarning.Size = new System.Drawing.Size(784, 26);
             this.lblWarning.TabIndex = 1;
             this.lblWarning.Text = "Warning: this layout might be inaccurate because there is MainScale / PostScale /" +
-    " Rotation information present, which is not yet fully supported by this applicat" +
-    "ion.";
+    " Rotation information present, which is not yet fully supported by the applicati" +
+    "on.";
             this.lblWarning.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblWarning.Visible = false;
             // 
