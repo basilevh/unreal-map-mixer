@@ -61,15 +61,16 @@
     <Compile Include="frmMapLayout.Designer.cs">
       <DependentUpon>frmMapLayout.cs</DependentUpon>
     </Compile>
-    <Compile Include="Math\Line3D.cs" />
+    <Compile Include="MyMath\Line3D.cs" />
     <Compile Include="MapDrawer.cs" />
+    <Compile Include="MyMath\Scale3D.cs" />
     <Compile Include="Mixers\IMapMixer.cs" />
     <Compile Include="Mixers\MapMixer.cs" />
     <Compile Include="Mixers\MapMixParams.cs" />
     <Compile Include="Mixers\OrderedMapMixer.cs" />
-    <Compile Include="Math\Point3D.cs" />
-    <Compile Include="Math\Polygon.cs" />
-    <Compile Include="Math\Rotation3D.cs" />
+    <Compile Include="MyMath\Point3D.cs" />
+    <Compile Include="MyMath\Polygon.cs" />
+    <Compile Include="MyMath\Rotation3D.cs" />
     <Compile Include="Mixers\ShuffledMapMixer.cs" />
     <Compile Include="Unreal\T3DFormatter.cs" />
     <Compile Include="Unreal\T3DParser.cs" />
@@ -79,7 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unreal\UnrealActor.cs" />
     <Compile Include="Unreal\UnrealBrush.cs" />
-    <Compile Include="Math\Vector3D.cs" />
+    <Compile Include="MyMath\Vector3D.cs" />
     <Compile Include="Unreal\UnrealObject.cs" />
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -113,9 +114,7 @@
   <ItemGroup>
     <None Include="Resources\UEDMapMixer.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Visualization\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

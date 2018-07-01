@@ -17,8 +17,12 @@ namespace UnrealMapMixer
         {
             InitializeComponent();
             this.map = map;
+
             drawer = new MapDrawer(map);
             drawLayout();
+
+            // Set warning label visibility
+            lblWarning.Visible = (map.Brushes.Any(b => b.IsRotated || b.IsScaled));
         }
 
         private UnrealMap map;

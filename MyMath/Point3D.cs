@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace UnrealMapMixer
+namespace UnrealMapMixer.MyMath
 {
     /// <summary>
     /// Immutable class that represents a point in a three-dimensional space.

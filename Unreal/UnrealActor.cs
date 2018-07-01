@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using UnrealMapMixer.MyMath;
 using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer
@@ -65,6 +66,8 @@ namespace UnrealMapMixer
         public Point3D Location => location;
 
         public Rotation3D Rotation => rotation;
+
+        public bool IsRotated => (rotation.Pitch != 0.0 || rotation.Yaw != 0.0 || rotation.Roll != 0.0);
 
         #region Text handling
 

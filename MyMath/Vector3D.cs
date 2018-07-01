@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace UnrealMapMixer
+namespace UnrealMapMixer.MyMath
 {
+    /// <summary>
+    /// Immutable class that represents a vector in a three-dimensional space.
+    /// </summary>
     public class Vector3D : Point3D
     {
         public Vector3D(double x, double y, double z, bool normalize)

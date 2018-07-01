@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using UnrealMapMixer.MyMath;
 using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer
@@ -30,15 +31,17 @@ namespace UnrealMapMixer
 
         protected UnrealBrush(UnrealBrush brush) : base(brush)
         {
+            type = brush.type;
             polyFlags = brush.polyFlags;
             isInvisible = brush.isInvisible;
             isPortal = brush.isPortal;
-            type = brush.type;
+            mainScale = brush.mainScale;
+            postScale = brush.postScale;
             polygons = brush.polygons.Select(p => new Polygon(p)).ToList();
             vertices = brush.vertices.Select(p => new Point3D(p)).ToList();
             edges = brush.edges.Select(l => new Line3D(l)).ToList();
         }
-        
+
         protected UnrealBrush(string text) : base(text)
         { }
 
@@ -53,14 +56,18 @@ namespace UnrealMapMixer
         /// <param name="text">T3D representation to be parsed</param>
         public new static UnrealBrush FromText(string text) => new UnrealBrush(text);
 
+        private BrushType type = BrushType.Unknown;
         private ulong polyFlags = 0;
         private bool isInvisible = false;
         private bool isPortal = false;
-        private BrushType type = BrushType.Unknown;
+        private Scale3D mainScale = new Scale3D();
+        private Scale3D postScale = new Scale3D();
         private string geometryText;
         private List<Polygon> polygons = new List<Polygon>();
         private List<Point3D> vertices = new List<Point3D>();
         private List<Line3D> edges = new List<Line3D>();
+
+        public BrushType Type => type;
 
         public ulong PolyFlags => polyFlags;
 
@@ -68,7 +75,12 @@ namespace UnrealMapMixer
 
         public bool IsPortal => isPortal;
 
-        public BrushType Type => type;
+        public Scale3D MainScale => mainScale;
+
+        public Scale3D PostScale => postScale;
+
+        public bool IsScaled => (mainScale.X != 1.0 || mainScale.Y != 1.0 || mainScale.Z != 1.0
+            || postScale.X != 1.0 || postScale.Y != 1.0 || postScale.Z != 1.0);
 
         public string GeometryText => geometryText;
 
@@ -89,19 +101,22 @@ namespace UnrealMapMixer
         {
             // Load properties
             base.loadText(text);
-            loadFlags(text);
-            loadType(text);
+            loadFlags();
+            loadType();
+            loadScale();
 
             // Load geometry
             geometryText = T3DParser.GetGeometryText(text);
             polygons = T3DParser.LoadPolygons(geometryText, Location).ToList();
+
+            // TODO: apply rotation and scaling
 
             // Process geometry
             loadVertices();
             loadEdges();
         }
 
-        private void loadFlags(string text)
+        private void loadFlags()
         {
             polyFlags = 0;
             isInvisible = false;
@@ -115,7 +130,7 @@ namespace UnrealMapMixer
             }
         }
 
-        private void loadType(string text)
+        private void loadType()
         {
             // https://wiki.beyondunreal.com/Legacy:PolyFlags
             type = BrushType.Unknown;
@@ -140,6 +155,11 @@ namespace UnrealMapMixer
                         type = BrushType.Subtract;
                 }
             }
+        }
+
+        private void loadScale()
+        {
+            // TODO
         }
 
         #endregion

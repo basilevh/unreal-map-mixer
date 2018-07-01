@@ -48,6 +48,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MyMath\Scale3DTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unreal\T3DFormatterTests.cs" />
     <Compile Include="Unreal\T3DParserTests.cs" />
