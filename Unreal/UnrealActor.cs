@@ -49,11 +49,15 @@ namespace UnrealMapMixer
         /// <param name="text">T3D representation to be parsed</param>
         public static UnrealActor FromText(string text) => new UnrealActor(text);
 
-        private Dictionary<string, string> properties;
         private string actorClass;
         private string actorName;
+        private Dictionary<string, string> properties;
         private Point3D location;
         private Rotation3D rotation;
+
+        public string Class => actorClass;
+
+        public string Name => actorName;
 
         public IEnumerable<KeyValuePair<string, string>> Properties => properties;
 
@@ -63,10 +67,6 @@ namespace UnrealMapMixer
         {
             properties[key] = value;
         }
-
-        public string Class => actorClass;
-
-        public string Name => actorName;
 
         public Point3D Location => location;
 

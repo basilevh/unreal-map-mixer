@@ -20,6 +20,9 @@ namespace UnrealMapMixer.Unreal
          * End Map
          */
 
+        /// <summary>
+        /// Collects all actors from a T3D representation.
+        /// </summary>
         public static IEnumerable<UnrealActor> LoadActors(string text)
         {
             int start = text.IndexOf("Begin Actor "); ;
@@ -39,43 +42,38 @@ namespace UnrealMapMixer.Unreal
             }
         }
 
-        public static string GenerateText(UnrealMap map)
+        /// <summary>
+        /// Collects all properties from an actor's T3D representation.
+        /// </summary>
+        public static IEnumerable<KeyValuePair<string, string>> GetProperties(string text)
         {
-            var builder = new StringBuilder();
+            var reader = new StringReader(text);
+            bool inBrush = false;
+            string line = reader.ReadLine();
+            while (line != null)
+            {
+                line = line.TrimStart();
 
-            // Add header
-            builder.AppendLine("Begin Map");
-            // Add all actors
-            foreach (var actor in map.Actors)
-                builder.AppendLine(actor.Text);
-            // Add footer
-            builder.AppendLine("End Map");
+                if (!inBrush && !line.StartsWith("Begin Actor") && !line.StartsWith("End Actor"))
+                {
+                    if (line.StartsWith("Begin Brush"))
+                        // This is a special brush-specific region with no relevant properties inside
+                        inBrush = true;
+                    else
+                    {
+                        // Find the equals sign and yield the property
+                        int separator = line.IndexOf('=');
+                        string key = line.Substring(0, separator);
+                        string value = line.Substring(separator + 1);
+                        yield return new KeyValuePair<string, string>(key, value);
+                    }
+                }
+                else if (inBrush && line.StartsWith("End Brush"))
+                    // End of brush-specific region
+                    inBrush = false;
 
-            return builder.ToString();
-        }
-
-        public static string GenerateText(UnrealActor actor)
-        {
-            var builder = new StringBuilder();
-
-            // Add header
-            builder.AppendLine("Begin Actor Class=" + actor.Class + " Name=" + actor.Name);
-            // Add all actors
-            foreach (var property in actor.Properties)
-                builder.AppendLine("\t" + property.Key + "=" + property.Value);
-            // Add footer
-            builder.AppendLine("End Actor");
-
-            return builder.ToString();
-        }
-
-        public static string GenerateText(UnrealBrush brush)
-        {
-            var builder = new StringBuilder();
-
-            // TODO
-
-            return builder.ToString();
+                line = reader.ReadLine();
+            }
         }
 
         /// <summary>
@@ -112,11 +110,11 @@ namespace UnrealMapMixer.Unreal
             return result;
         }
 
-        /* Polygon format:
+        /* Polygon format (? means not always present):
          * ...
-         * [?] PolyFlags=...
-         * [?] Location=(X=...,Y=...,Z=...)
-         * [?] Rotation=([?]Pitch=...,[?]Yaw=...,[?]Roll=...)
+         * [?]PolyFlags=...
+         * [?]Location=(X=...,Y=...,Z=...)
+         * [?]Rotation=([?]Pitch=...,[?]Yaw=...,[?]Roll=...)
          * ...
          * Begin Brush Name=...
          *    Begin PolyList
@@ -135,6 +133,9 @@ namespace UnrealMapMixer.Unreal
 
         // TODO account for MainScale, Rotation, PostScale
 
+        /// <summary>
+        /// Collects all polygons from a brush's T3D representation
+        /// </summary>
         public static IEnumerable<Polygon> LoadPolygons(string text, Point3D origin)
         {
             List<Point3D> polyVerts = null;
@@ -201,6 +202,82 @@ namespace UnrealMapMixer.Unreal
 
                 line = reader.ReadLine();
             }
+        }
+
+        /// <summary>
+        /// Generates a complete T3D file starting from a map instance.
+        /// </summary>
+        public static string GenerateText(UnrealMap map)
+        {
+            var builder = new StringBuilder();
+
+            // Add header
+            builder.AppendLine("Begin Map");
+            // Add all actors
+            foreach (var actor in map.Actors)
+                builder.AppendLine(actor.Text);
+            // Add footer
+            builder.AppendLine("End Map");
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Generates the T3D representation of an actor instance.
+        /// </summary>
+        public static string GenerateText(UnrealActor actor)
+        {
+            var builder = new StringBuilder();
+
+            // Add header
+            builder.AppendLine("Begin Actor Class=" + actor.Class + " Name=" + actor.Name);
+            // Add all properties
+            builder.AppendLine(generateProperties(actor));
+            // Add footer
+            builder.AppendLine("End Actor");
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Generates the T3D representation of a brush instance.
+        /// </summary>
+        public static string GenerateText(UnrealBrush brush)
+        {
+            var builder = new StringBuilder();
+
+            // Add header
+            builder.AppendLine("Begin Actor Class=Brush Name=" + brush.Name);
+            // Add all properties
+            builder.AppendLine(generateProperties(brush));
+            // Add brush-specific part
+            builder.AppendLine(generateBrushText(brush));
+            // Add footer
+            builder.AppendLine("End Actor");
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Generates an extensible T3D representation of an actor instance, so minus the header and footer.
+        /// </summary>
+        private static string generateProperties(UnrealActor actor)
+        {
+            var builder = new StringBuilder();
+            
+            // Add all properties
+            foreach (var property in actor.Properties)
+                builder.AppendLine("\t" + property.Key + "=" + property.Value);
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Generates the brush-specific part of the T3D representation of a brush instance.
+        /// </summary>
+        private static string generateBrushText(UnrealBrush brush)
+        {
+
         }
     }
 }
