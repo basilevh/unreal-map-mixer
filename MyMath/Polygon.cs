@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using UnrealMapMixer.MyMath;
 
-namespace UnrealMapMixer
+namespace UnrealMapMixer.MyMath
 {
     public class Polygon
     {

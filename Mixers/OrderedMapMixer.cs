@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnrealMapMixer.MyMath;
+using UnrealMapMixer.Unreal;
 
-namespace UnrealMapMixer
+namespace UnrealMapMixer.Mixers
 {
     /// <summary>
     /// UnrealMap mixer that merges multiple maps in a deterministic order. Every brush

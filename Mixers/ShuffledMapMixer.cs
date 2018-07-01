@@ -4,8 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnrealMapMixer.Unreal;
 
-namespace UnrealMapMixer
+namespace UnrealMapMixer.Mixers
 {
     /// <summary>
     /// UnrealMap mixer that merges multiple maps with the original brush orders intact,

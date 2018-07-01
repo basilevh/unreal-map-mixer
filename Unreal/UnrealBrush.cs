@@ -8,7 +8,7 @@ using System.Text;
 using UnrealMapMixer.MyMath;
 using UnrealMapMixer.Unreal;
 
-namespace UnrealMapMixer
+namespace UnrealMapMixer.Unreal
 {
     public enum BrushType
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace UnrealMapMixer
+namespace UnrealMapMixer.Mixers
 {
     /// <summary>
     /// Holds all parameters to pass to a MapMixer.
