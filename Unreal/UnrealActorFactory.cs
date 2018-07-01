@@ -14,8 +14,9 @@ namespace UnrealMapMixer
         /// </summary>
         public static UnrealActor FromText(string text)
         {
-            if (text.StartsWith("Begin Actor Class=Brush ")
+            if ((text.StartsWith("Begin Actor Class=Brush ")
                 || text.StartsWith("Begin Actor Class=Mover "))
+                && text.Contains("Begin Brush ")) // some "Brushes" do not contain geometry, no idea why
                 return UnrealBrush.FromText(text);
             else
                 return UnrealActor.FromText(text);

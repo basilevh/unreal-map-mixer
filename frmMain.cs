@@ -16,11 +16,13 @@ namespace UnrealMapMixer
         {
             InitializeComponent();
             initDialogs();
+            sourceMaps = new Dictionary<string, UnrealMap>();
             loadState();
         }
 
         private OpenFileDialog inputOpenDialog;
         private SaveFileDialog outputSaveDialog;
+        private Dictionary<string, UnrealMap> sourceMaps;
 
         private void initDialogs()
         {
@@ -35,6 +37,14 @@ namespace UnrealMapMixer
                 Filter = "Unreal Text (T3D) File (*.t3d)|*.t3d",
                 Title = "Specify destination file"
             };
+
+            // Set game folder if found
+            string utPath = FindUTPath();
+            if (utPath != null)
+            {
+                inputOpenDialog.InitialDirectory = utPath;
+                outputSaveDialog.InitialDirectory = utPath;
+            }
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -44,39 +54,54 @@ namespace UnrealMapMixer
 
         private void loadState()
         {
-            txtInputFiles.Lines = Properties.Settings.Default.InputFiles?.Cast<string>().ToArray();
+            lvwSourceFiles.Items.Clear();
+            if (Properties.Settings.Default.InputFiles != null)
+                foreach (string path in Properties.Settings.Default.InputFiles)
+                    if (File.Exists(path))
+                    {
+                        string text = File.ReadAllText(path);
+                        if (text.StartsWith("Begin Map"))
+                        {
+                            sourceMaps[path] = UnrealMap.FromText(text);
+                            lvwSourceFiles.Items.Add(createItemFromFile(path));
+                        }
+                    }
             txtExcludeActors.Lines = Properties.Settings.Default.ExcludedActors?.Cast<string>().ToArray();
         }
 
         private void saveState()
         {
             Properties.Settings.Default.InputFiles = new StringCollection();
-            Properties.Settings.Default.InputFiles.AddRange(txtInputFiles.Lines);
+            Properties.Settings.Default.InputFiles.AddRange(lvwSourceFiles.Items.Cast<ListViewItem>().Select(i => i.Text).ToArray());
             Properties.Settings.Default.ExcludedActors = new StringCollection();
             Properties.Settings.Default.ExcludedActors.AddRange(txtExcludeActors.Lines);
             Properties.Settings.Default.Save();
         }
 
+        private ListViewItem createItemFromFile(string path)
+        {
+            var map = UnrealMap.FromText(File.ReadAllText(path));
+            string title = map.Title;
+            string author = map.Author;
+            string type = (map.Type.ToString() != "Unknown" ? map.Type.ToString() : "");
+            var item = new ListViewItem(new string[] { path, title, author, type });
+            return item;
+        }
+
         private void btnGenerate_Click(object sender, EventArgs e)
         {
-            if (txtInputFiles.Text.Length == 0)
+            if (lvwSourceFiles.Items.Count == 0)
             {
                 MessageBox.Show("No source files are specified", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Get input maps
-            var maps = txtInputFiles.Lines
-                .Where(s => s.Length != 0)
-                .Select(s => File.ReadAllText(s))
-                .Select(s => UnrealMap.FromText(s));
-
             // Create mixer
             MapMixer mixer;
             if (radOrdered.Checked)
-                mixer = new OrderedMapMixer(maps);
+                mixer = new OrderedMapMixer(sourceMaps.Values);
             else if (radShuffled.Checked)
-                mixer = new ShuffledMapMixer(maps);
+                mixer = new ShuffledMapMixer(sourceMaps.Values);
             else
             {
                 MessageBox.Show("Unknown map mixing mode", Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -117,15 +142,87 @@ namespace UnrealMapMixer
                 File.WriteAllText(outputSaveDialog.FileName, result.Text);
         }
 
-        private void btnBrowse_Click(object sender, EventArgs e)
+        private void btnAdd_Click(object sender, EventArgs e)
         {
             if (inputOpenDialog.ShowDialog() == DialogResult.OK)
             {
                 // Replace the list of files with those just selected
-                txtInputFiles.Clear();
-                foreach (string fileName in inputOpenDialog.FileNames)
-                    txtInputFiles.AppendText(fileName + Environment.NewLine);
+                foreach (string path in inputOpenDialog.FileNames)
+                {
+                    string text = File.ReadAllText(path);
+                    if (text.StartsWith("Begin Map"))
+                    {
+                        sourceMaps[path] = UnrealMap.FromText(text);
+                        lvwSourceFiles.Items.Add(createItemFromFile(path));
+                    }
+                }
             }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            var paths = lvwSourceFiles.SelectedItems?.Cast<ListViewItem>().Select(i => i.Text);
+            foreach (string path in paths)
+            {
+                sourceMaps.Remove(path);
+                foreach (var item in lvwSourceFiles.Items.Cast<ListViewItem>())
+                    if (item.Text == path)
+                        item.Remove();
+            }
+        }
+
+        private void btnView_Click(object sender, EventArgs e)
+        {
+            var paths = lvwSourceFiles.SelectedItems?.Cast<ListViewItem>().Select(i => i.Text);
+            foreach (string path in paths)
+            {
+                var layoutForm = new frmMapLayout(sourceMaps[path]);
+                layoutForm.Show();
+            }
+        }
+
+        private static string FindUTPath()
+        {
+            var drives = System.IO.DriveInfo.GetDrives();
+            foreach (var drive in drives)
+                if (drive.IsReady)
+                {
+                    // Inspect level 1
+                    try
+                    {
+                        foreach (var dir in Directory.GetDirectories(drive.Name))
+                        {
+                            if (isUTPath(dir))
+                                return dir + "\\Maps";
+
+                            // Inspect level 2
+                            try
+                            {
+                                foreach (var subDir in Directory.GetDirectories(dir))
+                                {
+                                    if (isUTPath(subDir))
+                                        return subDir + "\\Maps";
+                                }
+                            }
+                            catch (UnauthorizedAccessException)
+                            { }
+                        }
+                    }
+                    catch (UnauthorizedAccessException)
+                    { }
+                }
+
+            // Not found
+            return null;
+        }
+
+        private static bool isUTPath(string folder)
+        {
+            // Check if both a 'Maps' and 'System' directory exist, and there is at least one UNR file in 'Maps'
+            return (folder.Contains("Tournament")
+                && Directory.Exists(folder + "\\Maps")
+                && Directory.Exists(folder + "\\System")
+                && Directory.GetFiles(folder + "\\Maps").Any(s => s.EndsWith(".unr")));
         }
     }
 }

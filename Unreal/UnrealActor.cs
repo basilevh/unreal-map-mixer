@@ -18,13 +18,7 @@ namespace UnrealMapMixer
         /// Creates a new modifiable actor.
         /// </summary>
         public UnrealActor() : base()
-        {
-            properties = new Dictionary<string, string>();
-            actorClass = null;
-            actorName = null;
-            location = new Point3D();
-            rotation = new Rotation3D();
-        }
+        { }
 
         protected UnrealActor(UnrealActor actor) : base(actor)
         {
@@ -51,9 +45,9 @@ namespace UnrealMapMixer
 
         private string actorClass;
         private string actorName;
-        private Dictionary<string, string> properties;
-        private Point3D location;
-        private Rotation3D rotation;
+        private Dictionary<string, string> properties = new Dictionary<string, string>();
+        private Point3D location = new Point3D();
+        private Rotation3D rotation = new Rotation3D();
 
         public string Class => actorClass;
 
@@ -61,7 +55,7 @@ namespace UnrealMapMixer
 
         public IEnumerable<KeyValuePair<string, string>> Properties => properties;
 
-        public string GetProperty(string key) => properties[key];
+        public string GetProperty(string key) => (properties.ContainsKey(key) ? properties[key] : null);
 
         public void SetProperty(string key, string value)
         {
@@ -91,19 +85,14 @@ namespace UnrealMapMixer
 
             actorClass = text.Substring(classEnd, classLength);
             actorName = text.Substring(nameEnd, nameLength);
-            loadProperties(text);
+            properties = T3DParser.GetProperties(text).ToDictionary(p => p.Key, p => p.Value);
             loadPosition();
-        }
-
-        private void loadProperties(string text)
-        {
-            // TODO
         }
 
         private void loadPosition()
         {
-            string loc = properties["Location"];
-            string rot = properties["Rotation"];
+            properties.TryGetValue("Location", out string loc);
+            properties.TryGetValue("Rotation", out string rot);
 
             // Assign location
             if (loc != null)

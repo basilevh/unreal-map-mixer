@@ -26,15 +26,7 @@ namespace UnrealMapMixer
         /// Creates a new modifiable brush.
         /// </summary>
         public UnrealBrush() : base()
-        {
-            polyFlags = 0;
-            isInvisible = false;
-            isPortal = false;
-            type = BrushType.Unknown;
-            polygons = new List<Polygon>();
-            vertices = new List<Point3D>();
-            edges = new List<Line3D>();
-        }
+        { }
 
         protected UnrealBrush(UnrealBrush brush) : base(brush)
         {
@@ -61,14 +53,14 @@ namespace UnrealMapMixer
         /// <param name="text">T3D representation to be parsed</param>
         public new static UnrealBrush FromText(string text) => new UnrealBrush(text);
 
-        private ulong polyFlags;
-        private bool isInvisible;
-        private bool isPortal;
-        private BrushType type;
+        private ulong polyFlags = 0;
+        private bool isInvisible = false;
+        private bool isPortal = false;
+        private BrushType type = BrushType.Unknown;
         private string geometryText;
-        private List<Polygon> polygons;
-        private List<Point3D> vertices;
-        private List<Line3D> edges;
+        private List<Polygon> polygons = new List<Polygon>();
+        private List<Point3D> vertices = new List<Point3D>();
+        private List<Line3D> edges = new List<Line3D>();
 
         public ulong PolyFlags => polyFlags;
 

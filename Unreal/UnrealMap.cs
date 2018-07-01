@@ -8,6 +8,11 @@ using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer
 {
+    public enum MapType
+    {
+        Additive, Subtractive, Unknown
+    }
+
     /// <summary>
     /// Represents a game level in Unreal Engine.
     /// </summary>
@@ -19,12 +24,6 @@ namespace UnrealMapMixer
         public UnrealMap() : base()
         {
             title = "New UMM Map";
-            author = null;
-            song = null;
-            actors = new List<UnrealActor>();
-            brushes = new List<UnrealBrush>();
-            actorCount = 0;
-            brushCount = 0;
         }
 
         protected UnrealMap(UnrealMap map) : base(map)
@@ -32,6 +31,7 @@ namespace UnrealMapMixer
             title = map.title;
             author = map.author;
             song = map.song;
+            type = map.type;
             actors = map.actors.Select(a => a.Duplicate()).ToList();
             brushes = map.brushes.Select(b => b.Duplicate()).ToList();
             actorCount = map.actorCount;
@@ -53,13 +53,14 @@ namespace UnrealMapMixer
         public static UnrealMap FromText(string text) => new UnrealMap(text);
 
         private UnrealActor levelInfo;
-        private string title;
-        private string author;
-        private string song;
-        private List<UnrealActor> actors;
-        private List<UnrealBrush> brushes;
-        private int actorCount;
-        private int brushCount;
+        private string title; // excluding quotes
+        private string author; // excluding quotes
+        private string song; // excluding Music'...'
+        private MapType type = MapType.Unknown;
+        private List<UnrealActor> actors = new List<UnrealActor>();
+        private List<UnrealBrush> brushes = new List<UnrealBrush>();
+        private int actorCount = 0;
+        private int brushCount = 0;
 
         public string Title
         {
@@ -118,6 +119,8 @@ namespace UnrealMapMixer
             }
         }
 
+        public MapType Type => type;
+
         public IEnumerable<UnrealActor> Actors => actors;
 
         public IEnumerable<UnrealBrush> Brushes => brushes;
@@ -164,6 +167,12 @@ namespace UnrealMapMixer
             return new Point3D(0.0, 0.0, 0.0);
         }
 
+        private void loadType()
+        {
+            // TODO: implement heuristic that checks for a big subtracted brush
+            type = MapType.Unknown;
+        }
+
         #endregion
 
         #region Text handling
@@ -178,7 +187,10 @@ namespace UnrealMapMixer
             foreach (var actor in T3DParser.LoadActors(text))
                 AddActor(actor);
             loadInfo();
+            loadType();
         }
+
+        #endregion
 
         private void loadInfo()
         {
@@ -186,11 +198,12 @@ namespace UnrealMapMixer
             if (levelInfo != null)
             {
                 title = levelInfo.GetProperty("Title");
+                title = title?.Substring(1, title.Length - 2);
                 author = levelInfo.GetProperty("Author");
+                author = author?.Substring(1, author.Length - 2);
                 song = levelInfo.GetProperty("Song");
+                song = song?.Substring(6, song.Length - 7);
             }
         }
-
-        #endregion
     }
 }

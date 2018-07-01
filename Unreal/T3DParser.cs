@@ -66,9 +66,12 @@ namespace UnrealMapMixer.Unreal
                     {
                         // Find the equals sign and yield the property
                         int separator = line.IndexOf('=');
-                        string key = line.Substring(0, separator);
-                        string value = line.Substring(separator + 1);
-                        yield return new KeyValuePair<string, string>(key, value);
+                        if (separator != -1)
+                        {
+                            string key = line.Substring(0, separator);
+                            string value = line.Substring(separator + 1);
+                            yield return new KeyValuePair<string, string>(key, value);
+                        }
                     }
                 }
                 else if (inBrush && line.StartsWith("End Brush"))

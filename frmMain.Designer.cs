@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            this.txtInputFiles = new System.Windows.Forms.TextBox();
             this.lblSolid = new System.Windows.Forms.Label();
             this.numSolid = new System.Windows.Forms.NumericUpDown();
             this.numLight = new System.Windows.Forms.NumericUpDown();
@@ -48,7 +47,12 @@
             this.txtExcludeActors = new System.Windows.Forms.TextBox();
             this.btnGenerate = new System.Windows.Forms.Button();
             this.grpInputFiles = new System.Windows.Forms.GroupBox();
-            this.btnBrowse = new System.Windows.Forms.Button();
+            this.lvwSourceFiles = new System.Windows.Forms.ListView();
+            this.clmPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmAuthor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnAdd = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tlblAuthor = new System.Windows.Forms.ToolStripStatusLabel();
             this.chkExMore = new System.Windows.Forms.CheckBox();
@@ -71,6 +75,8 @@
             this.radShuffled = new System.Windows.Forms.RadioButton();
             this.radOrdered = new System.Windows.Forms.RadioButton();
             this.lblMode = new System.Windows.Forms.Label();
+            this.btnRemove = new System.Windows.Forms.Button();
+            this.btnView = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numSolid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numLight)).BeginInit();
             this.grpProbabilities.SuspendLayout();
@@ -83,18 +89,6 @@
             this.grpExcludeActors.SuspendLayout();
             this.grpIntelligence.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // txtInputFiles
-            // 
-            this.txtInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtInputFiles.Location = new System.Drawing.Point(6, 19);
-            this.txtInputFiles.Multiline = true;
-            this.txtInputFiles.Name = "txtInputFiles";
-            this.txtInputFiles.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtInputFiles.Size = new System.Drawing.Size(608, 80);
-            this.txtInputFiles.TabIndex = 1;
             // 
             // lblSolid
             // 
@@ -159,7 +153,7 @@
             this.grpProbabilities.Controls.Add(this.lblLight);
             this.grpProbabilities.Controls.Add(this.numSolid);
             this.grpProbabilities.Controls.Add(this.lblSolid);
-            this.grpProbabilities.Location = new System.Drawing.Point(372, 152);
+            this.grpProbabilities.Location = new System.Drawing.Point(392, 172);
             this.grpProbabilities.Name = "grpProbabilities";
             this.grpProbabilities.Size = new System.Drawing.Size(260, 201);
             this.grpProbabilities.TabIndex = 6;
@@ -296,7 +290,7 @@
             // btnGenerate
             // 
             this.btnGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGenerate.Location = new System.Drawing.Point(372, 573);
+            this.btnGenerate.Location = new System.Drawing.Point(392, 593);
             this.btnGenerate.Name = "btnGenerate";
             this.btnGenerate.Size = new System.Drawing.Size(260, 23);
             this.btnGenerate.TabIndex = 8;
@@ -308,31 +302,73 @@
             // 
             this.grpInputFiles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpInputFiles.Controls.Add(this.btnBrowse);
-            this.grpInputFiles.Controls.Add(this.txtInputFiles);
+            this.grpInputFiles.Controls.Add(this.btnView);
+            this.grpInputFiles.Controls.Add(this.btnRemove);
+            this.grpInputFiles.Controls.Add(this.lvwSourceFiles);
+            this.grpInputFiles.Controls.Add(this.btnAdd);
             this.grpInputFiles.Location = new System.Drawing.Point(12, 12);
             this.grpInputFiles.Name = "grpInputFiles";
-            this.grpInputFiles.Size = new System.Drawing.Size(620, 134);
+            this.grpInputFiles.Size = new System.Drawing.Size(640, 154);
             this.grpInputFiles.TabIndex = 9;
             this.grpInputFiles.TabStop = false;
             this.grpInputFiles.Text = "Source Files";
             // 
-            // btnBrowse
+            // lvwSourceFiles
             // 
-            this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnBrowse.Location = new System.Drawing.Point(539, 105);
-            this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowse.TabIndex = 2;
-            this.btnBrowse.Text = "&Browse";
-            this.btnBrowse.UseVisualStyleBackColor = true;
-            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
+            this.lvwSourceFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvwSourceFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.clmPath,
+            this.clmTitle,
+            this.clmAuthor,
+            this.clmType});
+            this.lvwSourceFiles.FullRowSelect = true;
+            this.lvwSourceFiles.GridLines = true;
+            this.lvwSourceFiles.HideSelection = false;
+            this.lvwSourceFiles.Location = new System.Drawing.Point(6, 19);
+            this.lvwSourceFiles.Name = "lvwSourceFiles";
+            this.lvwSourceFiles.Size = new System.Drawing.Size(547, 129);
+            this.lvwSourceFiles.TabIndex = 3;
+            this.lvwSourceFiles.UseCompatibleStateImageBehavior = false;
+            this.lvwSourceFiles.View = System.Windows.Forms.View.Details;
+            // 
+            // clmPath
+            // 
+            this.clmPath.Text = "Path";
+            this.clmPath.Width = 270;
+            // 
+            // clmTitle
+            // 
+            this.clmTitle.Text = "Title";
+            this.clmTitle.Width = 100;
+            // 
+            // clmAuthor
+            // 
+            this.clmAuthor.Text = "Author";
+            this.clmAuthor.Width = 90;
+            // 
+            // clmType
+            // 
+            this.clmType.Text = "Type";
+            this.clmType.Width = 80;
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAdd.Location = new System.Drawing.Point(559, 19);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnAdd.TabIndex = 2;
+            this.btnAdd.Text = "&Add...";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Location = new System.Drawing.Point(0, 599);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 619);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(644, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(664, 22);
             this.statusStrip1.TabIndex = 10;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -366,7 +402,7 @@
             this.grpExcludeActors.Controls.Add(this.chkExMore);
             this.grpExcludeActors.Controls.Add(this.chkExZoneInfo);
             this.grpExcludeActors.Controls.Add(this.txtExcludeActors);
-            this.grpExcludeActors.Location = new System.Drawing.Point(372, 359);
+            this.grpExcludeActors.Location = new System.Drawing.Point(392, 379);
             this.grpExcludeActors.Name = "grpExcludeActors";
             this.grpExcludeActors.Size = new System.Drawing.Size(260, 208);
             this.grpExcludeActors.TabIndex = 7;
@@ -430,7 +466,7 @@
             this.lblKeepEventTag.Location = new System.Drawing.Point(6, 222);
             this.lblKeepEventTag.Margin = new System.Windows.Forms.Padding(3, 0, 3, 6);
             this.lblKeepEventTag.Name = "lblKeepEventTag";
-            this.lblKeepEventTag.Size = new System.Drawing.Size(342, 52);
+            this.lblKeepEventTag.Size = new System.Drawing.Size(362, 52);
             this.lblKeepEventTag.TabIndex = 4;
             this.lblKeepEventTag.Text = resources.GetString("lblKeepEventTag.Text");
             // 
@@ -455,7 +491,7 @@
             this.lblKeepWorldCons.Location = new System.Drawing.Point(6, 303);
             this.lblKeepWorldCons.Margin = new System.Windows.Forms.Padding(3, 0, 3, 6);
             this.lblKeepWorldCons.Name = "lblKeepWorldCons";
-            this.lblKeepWorldCons.Size = new System.Drawing.Size(342, 52);
+            this.lblKeepWorldCons.Size = new System.Drawing.Size(362, 52);
             this.lblKeepWorldCons.TabIndex = 8;
             this.lblKeepWorldCons.Text = resources.GetString("lblKeepWorldCons.Text");
             // 
@@ -478,9 +514,9 @@
             this.grpIntelligence.Controls.Add(this.chkKeepEventTag);
             this.grpIntelligence.Controls.Add(this.chkKeepWorldCons);
             this.grpIntelligence.Controls.Add(this.lblKeepEventTag);
-            this.grpIntelligence.Location = new System.Drawing.Point(12, 152);
+            this.grpIntelligence.Location = new System.Drawing.Point(12, 172);
             this.grpIntelligence.Name = "grpIntelligence";
-            this.grpIntelligence.Size = new System.Drawing.Size(354, 444);
+            this.grpIntelligence.Size = new System.Drawing.Size(374, 444);
             this.grpIntelligence.TabIndex = 9;
             this.grpIntelligence.TabStop = false;
             this.grpIntelligence.Text = "Intelligence";
@@ -495,7 +531,7 @@
             this.lblExpandPortals.Location = new System.Drawing.Point(6, 384);
             this.lblExpandPortals.Margin = new System.Windows.Forms.Padding(3, 0, 3, 6);
             this.lblExpandPortals.Name = "lblExpandPortals";
-            this.lblExpandPortals.Size = new System.Drawing.Size(342, 52);
+            this.lblExpandPortals.Size = new System.Drawing.Size(362, 52);
             this.lblExpandPortals.TabIndex = 16;
             this.lblExpandPortals.Text = resources.GetString("lblExpandPortals.Text");
             // 
@@ -520,7 +556,7 @@
             this.lblTranslateCOG.Location = new System.Drawing.Point(6, 154);
             this.lblTranslateCOG.Margin = new System.Windows.Forms.Padding(3, 0, 3, 6);
             this.lblTranslateCOG.Name = "lblTranslateCOG";
-            this.lblTranslateCOG.Size = new System.Drawing.Size(342, 39);
+            this.lblTranslateCOG.Size = new System.Drawing.Size(362, 39);
             this.lblTranslateCOG.TabIndex = 14;
             this.lblTranslateCOG.Text = "If checked, all input maps will first be \'moved to the origin\' by steps of 64, to" +
     " prevent that the mixed map content would become too disjunct due to differently" +
@@ -601,11 +637,33 @@
             this.lblMode.TabIndex = 8;
             this.lblMode.Text = "Mode:";
             // 
+            // btnRemove
+            // 
+            this.btnRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemove.Location = new System.Drawing.Point(559, 48);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(75, 23);
+            this.btnRemove.TabIndex = 4;
+            this.btnRemove.Text = "&Remove";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
+            // btnView
+            // 
+            this.btnView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnView.Location = new System.Drawing.Point(559, 77);
+            this.btnView.Name = "btnView";
+            this.btnView.Size = new System.Drawing.Size(75, 23);
+            this.btnView.TabIndex = 5;
+            this.btnView.Text = "&View Layout";
+            this.btnView.UseVisualStyleBackColor = true;
+            this.btnView.Click += new System.EventHandler(this.btnView_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(644, 621);
+            this.ClientSize = new System.Drawing.Size(664, 641);
             this.Controls.Add(this.grpIntelligence);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.grpInputFiles);
@@ -613,7 +671,7 @@
             this.Controls.Add(this.grpProbabilities);
             this.Controls.Add(this.grpExcludeActors);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(660, 660);
+            this.MinimumSize = new System.Drawing.Size(680, 680);
             this.Name = "frmMain";
             this.Text = "Unreal Tournament Map Mixer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
@@ -627,7 +685,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numSubtract)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOther)).EndInit();
             this.grpInputFiles.ResumeLayout(false);
-            this.grpInputFiles.PerformLayout();
             this.grpExcludeActors.ResumeLayout(false);
             this.grpExcludeActors.PerformLayout();
             this.grpIntelligence.ResumeLayout(false);
@@ -638,7 +695,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.TextBox txtInputFiles;
         private System.Windows.Forms.Label lblSolid;
         private System.Windows.Forms.NumericUpDown numSolid;
         private System.Windows.Forms.NumericUpDown numLight;
@@ -651,7 +707,7 @@
         private System.Windows.Forms.GroupBox grpInputFiles;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel tlblAuthor;
-        private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.CheckBox chkExMore;
         private System.Windows.Forms.GroupBox grpExcludeActors;
         private System.Windows.Forms.Label lblKeepEventTag;
@@ -680,6 +736,13 @@
         private System.Windows.Forms.CheckBox chkTranslateCOG;
         private System.Windows.Forms.CheckBox chkExpandPortals;
         private System.Windows.Forms.Label lblExpandPortals;
+        private System.Windows.Forms.ListView lvwSourceFiles;
+        private System.Windows.Forms.ColumnHeader clmPath;
+        private System.Windows.Forms.ColumnHeader clmTitle;
+        private System.Windows.Forms.ColumnHeader clmAuthor;
+        private System.Windows.Forms.ColumnHeader clmType;
+        private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.Button btnView;
     }
 }
 

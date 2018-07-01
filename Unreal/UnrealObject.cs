@@ -14,11 +14,7 @@ namespace UnrealMapMixer.Unreal
         /// Creates a new modifiable object.
         /// </summary>
         public UnrealObject()
-        {
-            isReadOnly = false;
-            text = null;
-            textDirty = true;
-        }
+        { }
 
         /// <summary>
         /// Creates a modifiable deep copy of an existing object.
@@ -45,9 +41,9 @@ namespace UnrealMapMixer.Unreal
             textDirty = false;
         }
 
-        protected readonly bool isReadOnly;
+        protected readonly bool isReadOnly = false;
         private string text;
-        protected bool textDirty; // whether 'text' must be updated before being returned
+        protected bool textDirty = true; // whether 'text' must be updated before being returned
 
         /// <summary>
         /// The file content for this map. This can be either the original text or newly generated text.
