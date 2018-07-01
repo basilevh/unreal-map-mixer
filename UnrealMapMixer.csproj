@@ -71,6 +71,7 @@
     <Compile Include="Math\Polygon.cs" />
     <Compile Include="Math\Rotation3D.cs" />
     <Compile Include="Mixers\ShuffledMapMixer.cs" />
+    <Compile Include="Unreal\T3DFormatter.cs" />
     <Compile Include="Unreal\T3DParser.cs" />
     <Compile Include="Unreal\UnrealActorFactory.cs" />
     <Compile Include="Unreal\UnrealMap.cs" />

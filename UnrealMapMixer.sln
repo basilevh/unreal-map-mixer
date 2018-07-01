@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnrealMapMixer", "UnrealMapMixer.csproj", "{D12CF4B9-A3D2-4F36-AC24-ABFB6ACF5057}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnrealMapMixerTests", "UnrealMapMixerTests\UnrealMapMixerTests.csproj", "{2CBDA589-9212-42B0-AF42-DB468CCAC2CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D12CF4B9-A3D2-4F36-AC24-ABFB6ACF5057}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D12CF4B9-A3D2-4F36-AC24-ABFB6ACF5057}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D12CF4B9-A3D2-4F36-AC24-ABFB6ACF5057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CBDA589-9212-42B0-AF42-DB468CCAC2CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CBDA589-9212-42B0-AF42-DB468CCAC2CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CBDA589-9212-42B0-AF42-DB468CCAC2CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CBDA589-9212-42B0-AF42-DB468CCAC2CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
