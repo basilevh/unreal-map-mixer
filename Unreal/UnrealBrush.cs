@@ -225,7 +225,7 @@ namespace UnrealMapMixer.Unreal
         /// <returns>Whether this brush has at least one slanted surface.</returns>
         public bool IsSlanted() => polygons.Any(p => p.IsSlanted());
 
-        /// <returns>Whether this brush is a non-slanted cuboid (i.e. a stretched cube).</returns>
+        /// <returns>Whether this brush is a non-slanted cuboid, i.e. a (possibly stretched) cube.</returns>
         public bool IsCuboid()
         {
             return (!IsSlanted()
@@ -233,17 +233,31 @@ namespace UnrealMapMixer.Unreal
                 && polygons.All(p => p.Vertices.Count() == 4));
         }
 
+        /// <returns>The minimum X value of all vertices.</returns>
         public double GetXMin() => vertices.Min(v => v.X);
 
+        /// <returns>The maximum X value of all vertices.</returns>
         public double GetXMax() => vertices.Max(v => v.X);
 
+        /// <returns>The minimum Y value of all vertices.</returns>
         public double GetYMin() => vertices.Min(v => v.Y);
 
+        /// <returns>The maximum Y value of all vertices.</returns>
         public double GetYMax() => vertices.Max(v => v.Y);
 
+        /// <returns>The minimum Z value of all vertices.</returns>
         public double GetZMin() => vertices.Min(v => v.Z);
 
+        /// <returns>The maximum Z value of all vertices.</returns>
         public double GetZMax() => vertices.Max(v => v.Z);
+
+        /// <summary>
+        /// Considers an encompassing cuboid bounded by the extremal vertex positions in each dimension to calculate a rough estimate of the volume.
+        /// The actual volume is less than or equal to this number.
+        /// </summary>
+        /// <returns>An upper bound on the brush's volume.</returns>
+        public double GetVolumeUpperBound() =>
+            (GetXMax() - GetXMin()) * (GetYMax() - GetYMin()) * (GetZMax() - GetZMin());
 
         /// <returns>
         /// Whether this brush overlaps with or touches another brush,
@@ -252,14 +266,47 @@ namespace UnrealMapMixer.Unreal
         /// </returns>
         public bool? OverlapsWith(UnrealBrush other)
         {
-            if (IsCuboid())
-            {
-                // TODO
-                return null;
-            }
+            bool overlapX = (GetXMin() - other.GetXMax()) * (GetXMax() - other.GetXMin()) <= 0.0;
+            bool overlapY = (GetYMin() - other.GetYMax()) * (GetYMax() - other.GetYMin()) <= 0.0;
+            bool overlapZ = (GetZMin() - other.GetZMax()) * (GetZMax() - other.GetZMin()) <= 0.0;
+            bool possible = (overlapX && overlapY && overlapZ);
 
-            return null;
+            if (IsCuboid())
+                return possible;
+
+            if (possible)
+                // The vertex bounds don't tell the whole story here
+                // TODO: devise an algorithm
+                return null;
+            else
+                return false;
         }
+        
+        /// <param name="point">The point to investigate.</param>
+        /// <param name="minDist">The required minimum distance from any edge.</param>
+        /// <returns>Whether the specified point is inside this brush.</returns>
+        public bool? Encompasses(Point3D point, double minDist = 0.0)
+        {
+            bool inX = (GetXMin() + minDist <= point.X && point.X <= GetXMax() - minDist);
+            bool inY = (GetYMin() + minDist <= point.Y && point.Y <= GetYMax() - minDist);
+            bool inZ = (GetZMin() + minDist <= point.Z && point.Z <= GetZMax() - minDist);
+            bool possible = (inX && inY && inZ);
+
+            if (IsCuboid())
+                return possible;
+
+            if (possible)
+                // The vertex bounds don't tell the whole story here
+                // TODO: devise an algorithm
+                return null;
+            else
+                return false;
+        }
+
+        /// <param name="actor">The actor to investigate.</param>
+        /// <param name="minDist">The required minimum distance from any edge.</param>
+        /// <returns>Whether the given actor is inside this brush.</returns>
+        public bool? Encompasses(UnrealActor actor, double minDist = 0.0) => Encompasses(actor.Location, minDist);
 
         #endregion
     }

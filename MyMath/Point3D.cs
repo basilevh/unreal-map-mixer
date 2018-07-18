@@ -99,5 +99,8 @@ namespace UnrealMapMixer.MyMath
         public Point3D Add(Vector3D other) => new Point3D(x + other.x, y + other.y, z + other.z);
 
         public Point3D Subtract(Vector3D other) => new Point3D(x - other.x, y - other.y, z - other.z);
+
+        public Point3D Round(double step) => new Point3D(
+            Math.Round(x / step) * step, Math.Round(y / step) * step, Math.Round(z / step) * step);
     }
 }

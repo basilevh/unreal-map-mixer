@@ -18,6 +18,8 @@ namespace UnrealMapMixer.Mixers
         public ShuffledMapMixer(IEnumerable<UnrealMap> maps) : base(maps)
         { }
 
+        // TODO: DRY
+
         public override UnrealMap Mix(MapMixParams mixParams)
         {
             var destMap = new UnrealMap();
@@ -30,7 +32,7 @@ namespace UnrealMapMixer.Mixers
                 if (mixParams.TranslateCommonCOG)
                 {
                     var cog = map.CalcCenterOfGravity();
-                    offset = new Vector3D(-cog.X, -cog.Y, -cog.Z);
+                    offset = new Vector3D(-cog.X, -cog.Y, -cog.Z).Round(TranslateCOGStep);
                 }
                 else
                     offset = new Vector3D();
@@ -59,7 +61,7 @@ namespace UnrealMapMixer.Mixers
             }
 
             // Shuffle
-            shuffle(mixActors);
+            Shuffle(mixActors);
 
             // Add selected actors
             foreach (var actor in mixActors)
@@ -72,13 +74,13 @@ namespace UnrealMapMixer.Mixers
             return destMap;
         }
 
-        private static void shuffle<T>(IList<T> list)
+        private static void Shuffle<T>(IList<T> list)
         {
             for (var i = 0; i < list.Count; i++)
-                swap(list, i, rnd.Next(i, list.Count));
+                Swap(list, i, rnd.Next(i, list.Count));
         }
 
-        private static void swap<T>(IList<T> list, int i, int j)
+        private static void Swap<T>(IList<T> list, int i, int j)
         {
             var temp = list[i];
             list[i] = list[j];

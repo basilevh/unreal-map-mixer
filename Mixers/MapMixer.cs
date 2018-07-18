@@ -11,6 +11,8 @@ namespace UnrealMapMixer.Mixers
 {
     public abstract class MapMixer : IMapMixer
     {
+        protected const double TranslateCOGStep = 64.0;
+
         // SkyZoneInfo and RockingSkyZoneInfo are still included
         public static readonly ReadOnlyCollection<string> ZoneInfoNames
             = new ReadOnlyCollection<string>(new[] {

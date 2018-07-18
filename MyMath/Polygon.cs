@@ -42,7 +42,7 @@ namespace UnrealMapMixer.MyMath
 
         public IEnumerable<Line3D> Edges => edges;
 
-        /// <returns>Whether the normal vector is non-zero in one dimension only.</returns>
+        /// <returns>Whether the normal vector is parallel with an axis, i.e. non-zero in one dimension only.</returns>
         public bool IsSlanted() => (getNonZeroDims() == 1);
 
         private int getNonZeroDims()

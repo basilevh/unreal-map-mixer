@@ -19,6 +19,8 @@ namespace UnrealMapMixer.Mixers
         public OrderedMapMixer(IEnumerable<UnrealMap> maps) : base(maps)
         { }
 
+        // TODO: DRY
+
         public override UnrealMap Mix(MapMixParams mixParams)
         {
             var destMap = new UnrealMap();

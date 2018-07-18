@@ -152,20 +152,35 @@ namespace UnrealMapMixer.Unreal
 
         #region Intelligence
 
+        /// <summary>
+        /// Removes all PlayerStart actors that are not encompassed by any subtracting brush.
+        /// </summary>
         public void RemoveTrappedPlayerStarts()
         {
             if (isReadOnly)
                 throw new InvalidOperationException("This map cannot be modified because it is read-only");
             else
-            {
-                // TODO
-            }
+                actors.RemoveAll(a => brushes.All(b => b.Type != BrushType.Subtract || b.Encompasses(a, 24.0) == false));
         }
 
+        /// <summary>
+        /// Calculates the volume-weighted center of gravity of this map by considering the encompassing cuboids of all brushes.
+        /// </summary>
         public Point3D CalcCenterOfGravity()
         {
-            // TODO
-            return new Point3D(0.0, 0.0, 0.0);
+            double x = 0.0;
+            double y = 0.0;
+            double z = 0.0;
+            double sumVol = 0.0;
+            foreach (var brush in brushes)
+            {
+                double curVol = brush.GetVolumeUpperBound();
+                x += (brush.GetXMax() + brush.GetXMin()) / 2.0 * curVol;
+                y += (brush.GetYMax() + brush.GetYMin()) / 2.0 * curVol;
+                z += (brush.GetZMax() + brush.GetZMin()) / 2.0 * curVol;
+                sumVol += curVol;
+            }
+            return new Point3D(x / sumVol, y / sumVol, z / sumVol);
         }
 
         private void loadType()

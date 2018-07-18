@@ -34,5 +34,7 @@ namespace UnrealMapMixer.MyMath
 
         public Vector3D() : this(0.0, 0.0, 0.0)
         { }
+
+        public new Vector3D Round(double step) => new Vector3D(base.Round(step));
     }
 }
