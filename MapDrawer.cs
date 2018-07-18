@@ -46,13 +46,13 @@ namespace UnrealMapMixer
             {
                 // Determine pen to use
                 Pen usedPen;
-                switch (brush.Type)
+                switch (brush.Operation)
                 {
-                    case BrushType.Solid: usedPen = solidPen; break;
-                    case BrushType.SemiSolid: usedPen = semiSolidPen; break;
-                    case BrushType.NonSolid: usedPen = nonSolidPen; break;
-                    case BrushType.Subtract: usedPen = subtractPen; break;
-                    case BrushType.Mover: usedPen = moverPen; break;
+                    case BrushOperation.Solid: usedPen = solidPen; break;
+                    case BrushOperation.SemiSolid: usedPen = semiSolidPen; break;
+                    case BrushOperation.NonSolid: usedPen = nonSolidPen; break;
+                    case BrushOperation.Subtract: usedPen = subtractPen; break;
+                    case BrushOperation.Mover: usedPen = moverPen; break;
                     default: usedPen = unknownPen; break;
                 }
 

@@ -160,7 +160,12 @@ namespace UnrealMapMixer.Unreal
             if (isReadOnly)
                 throw new InvalidOperationException("This map cannot be modified because it is read-only");
             else
-                actors.RemoveAll(a => brushes.All(b => b.Type != BrushType.Subtract || b.Encompasses(a, 24.0) == false));
+            {
+                // TODO: this is not the way to do it; brushes may be added and/or subtracted afterwards etc.
+                actors.RemoveAll(a => a.Class == "PlayerStart"
+                    && brushes.All(b => b.Operation != BrushOperation.Subtract
+                    || b.Encompasses(a, 24.0) == false));
+            }
         }
 
         /// <summary>

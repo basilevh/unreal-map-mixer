@@ -249,7 +249,7 @@ namespace UnrealMapMixer.Unreal
             // Add header
             builder.AppendLine("Begin Actor Class=" + actor.Class + " Name=" + actor.Name);
             // Add all properties
-            builder.AppendLine(generateProperties(actor));
+            builder.AppendLine(GenerateProperties(actor));
             // Add footer
             builder.AppendLine("End Actor");
 
@@ -266,7 +266,7 @@ namespace UnrealMapMixer.Unreal
             // Add header
             builder.AppendLine("Begin Actor Class=Brush Name=" + brush.Name);
             // Add all properties
-            builder.AppendLine(generateProperties(brush));
+            builder.AppendLine(GenerateProperties(brush));
             // Add geometry part
             builder.AppendLine(brush.GeometryText);
             // Add footer
@@ -278,7 +278,7 @@ namespace UnrealMapMixer.Unreal
         /// <summary>
         /// Generates an extensible T3D representation of an actor instance, so minus the header and footer.
         /// </summary>
-        private static string generateProperties(UnrealActor actor)
+        private static string GenerateProperties(UnrealActor actor)
         {
             var builder = new StringBuilder();
 
@@ -301,7 +301,7 @@ namespace UnrealMapMixer.Unreal
 
             while (line != null)
             {
-                var curVert = parseVertex(line);
+                var curVert = ParseVertex(line);
                 if (curVert != null && curVert.ApproxEquals(from, absTol))
                     // Replace this line with the new vertex
                     line = "             Vertex   " + newCoords;
@@ -339,7 +339,7 @@ namespace UnrealMapMixer.Unreal
             return builder.ToString();
         }*/
 
-        private static Point3D parseVertex(string line)
+        private static Point3D ParseVertex(string line)
         {
             int start = line.IndexOf("Vertex ");
             if (start != -1)

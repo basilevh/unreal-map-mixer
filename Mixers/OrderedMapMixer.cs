@@ -54,6 +54,7 @@ namespace UnrealMapMixer.Mixers
 
             // Pick brushes randomly
             var mixBrushes = new List<UnrealBrush>();
+            mixBrushes.Add(maps.First().Brushes.First()); // add builder brush
             foreach (var brush in allBrushes)
             {
                 // Check exclusions
@@ -67,14 +68,14 @@ namespace UnrealMapMixer.Mixers
 
                 // Get probability
                 double prob;
-                switch (brush.Type)
+                switch (brush.Operation)
                 {
-                    case BrushType.Solid: prob = mixParams.SolidProb; break;
-                    case BrushType.SemiSolid: prob = mixParams.SemiSolidProb; break;
-                    case BrushType.NonSolid: prob = mixParams.NonSolidProb; break;
-                    case BrushType.Subtract: prob = mixParams.SubtractProb; break;
-                    case BrushType.Mover: prob = mixParams.MoverProb; break;
-                    default: prob = 0.0; break;
+                    case BrushOperation.Solid: prob = mixParams.SolidProb; break;
+                    case BrushOperation.SemiSolid: prob = mixParams.SemiSolidProb; break;
+                    case BrushOperation.NonSolid: prob = mixParams.NonSolidProb; break;
+                    case BrushOperation.Subtract: prob = mixParams.SubtractProb; break;
+                    case BrushOperation.Mover: prob = mixParams.MoverProb; break;
+                    default: prob = 0.0; break; // probably builder brush, which is already included
                 }
 
                 if (RandExp(prob))

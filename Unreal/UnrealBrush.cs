@@ -10,7 +10,7 @@ using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer.Unreal
 {
-    public enum BrushType
+    public enum BrushOperation
     {
         Solid, SemiSolid, NonSolid, Subtract, Mover, Unknown
     }
@@ -31,7 +31,7 @@ namespace UnrealMapMixer.Unreal
 
         protected UnrealBrush(UnrealBrush brush) : base(brush)
         {
-            type = brush.type;
+            operation = brush.operation;
             polyFlags = brush.polyFlags;
             isInvisible = brush.isInvisible;
             isPortal = brush.isPortal;
@@ -66,7 +66,7 @@ namespace UnrealMapMixer.Unreal
         /// <param name="text">T3D representation to be parsed</param>
         public new static UnrealBrush FromText(string text) => new UnrealBrush(text);
 
-        private BrushType type = BrushType.Unknown;
+        private BrushOperation operation = BrushOperation.Unknown;
         private ulong polyFlags = 0;
         private bool isInvisible = false;
         private bool isPortal = false;
@@ -77,7 +77,7 @@ namespace UnrealMapMixer.Unreal
         private List<Point3D> vertices = new List<Point3D>();
         private List<Line3D> edges = new List<Line3D>();
 
-        public BrushType Type => type;
+        public BrushOperation Operation => operation;
 
         public ulong PolyFlags => polyFlags;
 
@@ -112,7 +112,7 @@ namespace UnrealMapMixer.Unreal
             // Load properties
             base.loadText(text);
             loadFlags();
-            loadType();
+            loadOperation();
             loadScale();
 
             // Load geometry
@@ -136,13 +136,13 @@ namespace UnrealMapMixer.Unreal
             // TODO: include individual polygons as well (round average?)
         }
 
-        private void loadType()
+        private void loadOperation()
         {
             // https://wiki.beyondunreal.com/Legacy:PolyFlags
-            type = BrushType.Unknown;
+            operation = BrushOperation.Unknown;
 
             if (Class == "Mover")
-                type = BrushType.Mover;
+                operation = BrushOperation.Mover;
             else
             {
                 string value = GetProperty("CsgOper");
@@ -151,14 +151,14 @@ namespace UnrealMapMixer.Unreal
                     if (value == "CSG_Add")
                     {
                         if ((polyFlags & 1 << 5) != 0)
-                            type = BrushType.SemiSolid;
+                            operation = BrushOperation.SemiSolid;
                         else if ((polyFlags & 1 << 3) != 0)
-                            type = BrushType.NonSolid;
+                            operation = BrushOperation.NonSolid;
                         else
-                            type = BrushType.Solid;
+                            operation = BrushOperation.Solid;
                     }
                     else if (value == "CSG_Subtract")
-                        type = BrushType.Subtract;
+                        operation = BrushOperation.Subtract;
                 }
             }
         }

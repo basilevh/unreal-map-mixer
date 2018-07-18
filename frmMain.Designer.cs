@@ -77,11 +77,12 @@
             this.tbcParameters = new System.Windows.Forms.TabControl();
             this.tabIntelligence = new System.Windows.Forms.TabPage();
             this.tabProbabilities = new System.Windows.Forms.TabPage();
-            this.tabExcluded = new System.Windows.Forms.TabPage();
-            this.tabExtras = new System.Windows.Forms.TabPage();
-            this.chkSwapAct = new System.Windows.Forms.CheckBox();
-            this.chkSwapTex = new System.Windows.Forms.CheckBox();
             this.lblProbs = new System.Windows.Forms.Label();
+            this.tabExcluded = new System.Windows.Forms.TabPage();
+            this.lblExclusions = new System.Windows.Forms.Label();
+            this.tabExtras = new System.Windows.Forms.TabPage();
+            this.chkSwapTex = new System.Windows.Forms.CheckBox();
+            this.chkSwapAct = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numSolid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numLight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numNonSolid)).BeginInit();
@@ -291,11 +292,11 @@
             this.txtExcludeActors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtExcludeActors.Location = new System.Drawing.Point(6, 98);
+            this.txtExcludeActors.Location = new System.Drawing.Point(6, 130);
             this.txtExcludeActors.Multiline = true;
             this.txtExcludeActors.Name = "txtExcludeActors";
             this.txtExcludeActors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtExcludeActors.Size = new System.Drawing.Size(640, 305);
+            this.txtExcludeActors.Size = new System.Drawing.Size(640, 273);
             this.txtExcludeActors.TabIndex = 0;
             // 
             // btnGenerate
@@ -421,11 +422,11 @@
             this.chkExMore.AutoSize = true;
             this.chkExMore.Checked = true;
             this.chkExMore.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkExMore.Location = new System.Drawing.Point(6, 75);
+            this.chkExMore.Location = new System.Drawing.Point(6, 107);
             this.chkExMore.Name = "chkExMore";
-            this.chkExMore.Size = new System.Drawing.Size(154, 17);
+            this.chkExMore.Size = new System.Drawing.Size(181, 17);
             this.chkExMore.TabIndex = 3;
-            this.chkExMore.Text = "More (specific &names only):";
+            this.chkExMore.Text = "&More (specific class names only):";
             this.chkExMore.UseVisualStyleBackColor = true;
             // 
             // chkExPortal
@@ -433,7 +434,7 @@
             this.chkExPortal.AutoSize = true;
             this.chkExPortal.Checked = true;
             this.chkExPortal.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkExPortal.Location = new System.Drawing.Point(6, 29);
+            this.chkExPortal.Location = new System.Drawing.Point(6, 61);
             this.chkExPortal.Name = "chkExPortal";
             this.chkExPortal.Size = new System.Drawing.Size(94, 17);
             this.chkExPortal.TabIndex = 5;
@@ -445,7 +446,7 @@
             this.chkExInvis.AutoSize = true;
             this.chkExInvis.Checked = true;
             this.chkExInvis.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkExInvis.Location = new System.Drawing.Point(6, 6);
+            this.chkExInvis.Location = new System.Drawing.Point(6, 38);
             this.chkExInvis.Name = "chkExInvis";
             this.chkExInvis.Size = new System.Drawing.Size(105, 17);
             this.chkExInvis.TabIndex = 4;
@@ -457,7 +458,7 @@
             this.chkExZoneInfo.AutoSize = true;
             this.chkExZoneInfo.Checked = true;
             this.chkExZoneInfo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkExZoneInfo.Location = new System.Drawing.Point(6, 52);
+            this.chkExZoneInfo.Location = new System.Drawing.Point(6, 84);
             this.chkExZoneInfo.Name = "chkExZoneInfo";
             this.chkExZoneInfo.Size = new System.Drawing.Size(253, 17);
             this.chkExZoneInfo.TabIndex = 1;
@@ -617,10 +618,10 @@
             this.radOrdered.Checked = true;
             this.radOrdered.Location = new System.Drawing.Point(49, 6);
             this.radOrdered.Name = "radOrdered";
-            this.radOrdered.Size = new System.Drawing.Size(82, 17);
+            this.radOrdered.Size = new System.Drawing.Size(158, 17);
             this.radOrdered.TabIndex = 8;
             this.radOrdered.TabStop = true;
-            this.radOrdered.Text = "&Ordered Mix";
+            this.radOrdered.Text = "&Ordered Mix (recommended)";
             this.radOrdered.UseVisualStyleBackColor = true;
             // 
             // lblMode
@@ -696,8 +697,21 @@
             this.tabProbabilities.Text = "Probabilities";
             this.tabProbabilities.UseVisualStyleBackColor = true;
             // 
+            // lblProbs
+            // 
+            this.lblProbs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblProbs.Location = new System.Drawing.Point(6, 8);
+            this.lblProbs.Margin = new System.Windows.Forms.Padding(3);
+            this.lblProbs.Name = "lblProbs";
+            this.lblProbs.Size = new System.Drawing.Size(640, 26);
+            this.lblProbs.TabIndex = 16;
+            this.lblProbs.Text = "These values specify the probabilities that a particular actor will be copied fro" +
+    "m a source map to the mixed map, depending on its type.";
+            // 
             // tabExcluded
             // 
+            this.tabExcluded.Controls.Add(this.lblExclusions);
             this.tabExcluded.Controls.Add(this.chkExPortal);
             this.tabExcluded.Controls.Add(this.chkExInvis);
             this.tabExcluded.Controls.Add(this.txtExcludeActors);
@@ -711,6 +725,19 @@
             this.tabExcluded.Text = "Exclusions";
             this.tabExcluded.UseVisualStyleBackColor = true;
             // 
+            // lblExclusions
+            // 
+            this.lblExclusions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblExclusions.Location = new System.Drawing.Point(6, 6);
+            this.lblExclusions.Margin = new System.Windows.Forms.Padding(3);
+            this.lblExclusions.Name = "lblExclusions";
+            this.lblExclusions.Size = new System.Drawing.Size(640, 26);
+            this.lblExclusions.TabIndex = 17;
+            this.lblExclusions.Text = "If checked, the following objects will not be copied from the source maps. If you" +
+    " are mixing subtractive maps with high brush copy probabilities, then feel free " +
+    "to turn these off.";
+            // 
             // tabExtras
             // 
             this.tabExtras.Controls.Add(this.chkSwapTex);
@@ -723,17 +750,6 @@
             this.tabExtras.Text = "Extras";
             this.tabExtras.UseVisualStyleBackColor = true;
             // 
-            // chkSwapAct
-            // 
-            this.chkSwapAct.AutoSize = true;
-            this.chkSwapAct.Enabled = false;
-            this.chkSwapAct.Location = new System.Drawing.Point(6, 29);
-            this.chkSwapAct.Name = "chkSwapAct";
-            this.chkSwapAct.Size = new System.Drawing.Size(86, 17);
-            this.chkSwapAct.TabIndex = 0;
-            this.chkSwapAct.Text = "Swap &Actors";
-            this.chkSwapAct.UseVisualStyleBackColor = true;
-            // 
             // chkSwapTex
             // 
             this.chkSwapTex.AutoSize = true;
@@ -745,17 +761,16 @@
             this.chkSwapTex.Text = "Swap &Textures";
             this.chkSwapTex.UseVisualStyleBackColor = true;
             // 
-            // lblProbs
+            // chkSwapAct
             // 
-            this.lblProbs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblProbs.Location = new System.Drawing.Point(6, 8);
-            this.lblProbs.Margin = new System.Windows.Forms.Padding(3);
-            this.lblProbs.Name = "lblProbs";
-            this.lblProbs.Size = new System.Drawing.Size(640, 26);
-            this.lblProbs.TabIndex = 16;
-            this.lblProbs.Text = "These values specify the probabilities that a particular actor will be copied fro" +
-    "m a source map to the mixed map, depending on its type.";
+            this.chkSwapAct.AutoSize = true;
+            this.chkSwapAct.Enabled = false;
+            this.chkSwapAct.Location = new System.Drawing.Point(6, 29);
+            this.chkSwapAct.Name = "chkSwapAct";
+            this.chkSwapAct.Size = new System.Drawing.Size(86, 17);
+            this.chkSwapAct.TabIndex = 0;
+            this.chkSwapAct.Text = "Swap &Actors";
+            this.chkSwapAct.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 
@@ -847,6 +862,7 @@
         private System.Windows.Forms.CheckBox chkSwapTex;
         private System.Windows.Forms.CheckBox chkSwapAct;
         private System.Windows.Forms.Label lblProbs;
+        private System.Windows.Forms.Label lblExclusions;
     }
 }
 
