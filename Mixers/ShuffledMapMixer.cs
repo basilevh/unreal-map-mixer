@@ -56,7 +56,7 @@ namespace UnrealMapMixer.Mixers
                 else
                     prob = mixParams.OtherProb;
 
-                if (randExp(prob))
+                if (RandExp(prob))
                     mixActors.Add(actor);
             }
 

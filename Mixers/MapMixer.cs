@@ -37,8 +37,8 @@ namespace UnrealMapMixer.Mixers
         public abstract UnrealMap Mix(MapMixParams mixParams);
 
         /// <summary>
-        /// Runs a random experiment with a boolean outcome.
+        /// Runs a random experiment (binomial trial) with a boolean outcome.
         /// </summary>
-        protected static bool randExp(double probTrue) => (rnd.NextDouble() < probTrue);
+        protected static bool RandExp(double probTrue) => (rnd.NextDouble() < probTrue);
     }
 }

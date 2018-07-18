@@ -77,7 +77,7 @@ namespace UnrealMapMixer.Mixers
                     default: prob = 0.0; break;
                 }
 
-                if (randExp(prob))
+                if (RandExp(prob))
                     mixBrushes.Add(brush);
             }
 
@@ -98,7 +98,7 @@ namespace UnrealMapMixer.Mixers
                 else
                     prob = mixParams.OtherProb;
 
-                if (randExp(prob))
+                if (RandExp(prob))
                     mixActors.Add(actor);
             }
 
