@@ -81,6 +81,7 @@
             this.tabExtras = new System.Windows.Forms.TabPage();
             this.chkSwapAct = new System.Windows.Forms.CheckBox();
             this.chkSwapTex = new System.Windows.Forms.CheckBox();
+            this.lblProbs = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numSolid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numLight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numNonSolid)).BeginInit();
@@ -99,7 +100,7 @@
             // lblSolid
             // 
             this.lblSolid.AutoSize = true;
-            this.lblSolid.Location = new System.Drawing.Point(6, 8);
+            this.lblSolid.Location = new System.Drawing.Point(6, 42);
             this.lblSolid.Name = "lblSolid";
             this.lblSolid.Size = new System.Drawing.Size(91, 13);
             this.lblSolid.TabIndex = 2;
@@ -113,7 +114,7 @@
             0,
             0,
             0});
-            this.numSolid.Location = new System.Drawing.Point(129, 6);
+            this.numSolid.Location = new System.Drawing.Point(129, 40);
             this.numSolid.Name = "numSolid";
             this.numSolid.Size = new System.Drawing.Size(60, 20);
             this.numSolid.TabIndex = 3;
@@ -131,7 +132,7 @@
             0,
             0,
             0});
-            this.numLight.Location = new System.Drawing.Point(129, 136);
+            this.numLight.Location = new System.Drawing.Point(129, 170);
             this.numLight.Name = "numLight";
             this.numLight.Size = new System.Drawing.Size(60, 20);
             this.numLight.TabIndex = 5;
@@ -144,7 +145,7 @@
             // lblLight
             // 
             this.lblLight.AutoSize = true;
-            this.lblLight.Location = new System.Drawing.Point(6, 138);
+            this.lblLight.Location = new System.Drawing.Point(6, 172);
             this.lblLight.Name = "lblLight";
             this.lblLight.Size = new System.Drawing.Size(55, 13);
             this.lblLight.TabIndex = 4;
@@ -158,7 +159,7 @@
             0,
             0,
             0});
-            this.numNonSolid.Location = new System.Drawing.Point(129, 58);
+            this.numNonSolid.Location = new System.Drawing.Point(129, 92);
             this.numNonSolid.Name = "numNonSolid";
             this.numNonSolid.Size = new System.Drawing.Size(60, 20);
             this.numNonSolid.TabIndex = 15;
@@ -171,7 +172,7 @@
             // lblNonSolid
             // 
             this.lblNonSolid.AutoSize = true;
-            this.lblNonSolid.Location = new System.Drawing.Point(6, 60);
+            this.lblNonSolid.Location = new System.Drawing.Point(6, 94);
             this.lblNonSolid.Name = "lblNonSolid";
             this.lblNonSolid.Size = new System.Drawing.Size(114, 13);
             this.lblNonSolid.TabIndex = 14;
@@ -185,7 +186,7 @@
             0,
             0,
             0});
-            this.numSemiSolid.Location = new System.Drawing.Point(129, 32);
+            this.numSemiSolid.Location = new System.Drawing.Point(129, 66);
             this.numSemiSolid.Name = "numSemiSolid";
             this.numSemiSolid.Size = new System.Drawing.Size(60, 20);
             this.numSemiSolid.TabIndex = 13;
@@ -198,7 +199,7 @@
             // lblSemiSolid
             // 
             this.lblSemiSolid.AutoSize = true;
-            this.lblSemiSolid.Location = new System.Drawing.Point(6, 34);
+            this.lblSemiSolid.Location = new System.Drawing.Point(6, 68);
             this.lblSemiSolid.Name = "lblSemiSolid";
             this.lblSemiSolid.Size = new System.Drawing.Size(117, 13);
             this.lblSemiSolid.TabIndex = 12;
@@ -212,7 +213,7 @@
             0,
             0,
             0});
-            this.numMover.Location = new System.Drawing.Point(129, 110);
+            this.numMover.Location = new System.Drawing.Point(129, 144);
             this.numMover.Name = "numMover";
             this.numMover.Size = new System.Drawing.Size(60, 20);
             this.numMover.TabIndex = 11;
@@ -225,7 +226,7 @@
             // lblMover
             // 
             this.lblMover.AutoSize = true;
-            this.lblMover.Location = new System.Drawing.Point(6, 112);
+            this.lblMover.Location = new System.Drawing.Point(6, 146);
             this.lblMover.Name = "lblMover";
             this.lblMover.Size = new System.Drawing.Size(98, 13);
             this.lblMover.TabIndex = 10;
@@ -239,7 +240,7 @@
             0,
             0,
             0});
-            this.numSubtract.Location = new System.Drawing.Point(129, 84);
+            this.numSubtract.Location = new System.Drawing.Point(129, 118);
             this.numSubtract.Name = "numSubtract";
             this.numSubtract.Size = new System.Drawing.Size(60, 20);
             this.numSubtract.TabIndex = 9;
@@ -252,7 +253,7 @@
             // lblSubtract
             // 
             this.lblSubtract.AutoSize = true;
-            this.lblSubtract.Location = new System.Drawing.Point(6, 86);
+            this.lblSubtract.Location = new System.Drawing.Point(6, 120);
             this.lblSubtract.Name = "lblSubtract";
             this.lblSubtract.Size = new System.Drawing.Size(108, 13);
             this.lblSubtract.TabIndex = 8;
@@ -266,7 +267,7 @@
             0,
             0,
             0});
-            this.numOther.Location = new System.Drawing.Point(129, 162);
+            this.numOther.Location = new System.Drawing.Point(129, 196);
             this.numOther.Name = "numOther";
             this.numOther.Size = new System.Drawing.Size(60, 20);
             this.numOther.TabIndex = 7;
@@ -279,7 +280,7 @@
             // lblOther
             // 
             this.lblOther.AutoSize = true;
-            this.lblOther.Location = new System.Drawing.Point(6, 164);
+            this.lblOther.Location = new System.Drawing.Point(6, 198);
             this.lblOther.Name = "lblOther";
             this.lblOther.Size = new System.Drawing.Size(98, 13);
             this.lblOther.TabIndex = 6;
@@ -672,6 +673,7 @@
             // 
             // tabProbabilities
             // 
+            this.tabProbabilities.Controls.Add(this.lblProbs);
             this.tabProbabilities.Controls.Add(this.numNonSolid);
             this.tabProbabilities.Controls.Add(this.numSolid);
             this.tabProbabilities.Controls.Add(this.lblNonSolid);
@@ -724,6 +726,7 @@
             // chkSwapAct
             // 
             this.chkSwapAct.AutoSize = true;
+            this.chkSwapAct.Enabled = false;
             this.chkSwapAct.Location = new System.Drawing.Point(6, 29);
             this.chkSwapAct.Name = "chkSwapAct";
             this.chkSwapAct.Size = new System.Drawing.Size(86, 17);
@@ -734,12 +737,25 @@
             // chkSwapTex
             // 
             this.chkSwapTex.AutoSize = true;
+            this.chkSwapTex.Enabled = false;
             this.chkSwapTex.Location = new System.Drawing.Point(6, 6);
             this.chkSwapTex.Name = "chkSwapTex";
             this.chkSwapTex.Size = new System.Drawing.Size(97, 17);
             this.chkSwapTex.TabIndex = 1;
             this.chkSwapTex.Text = "Swap &Textures";
             this.chkSwapTex.UseVisualStyleBackColor = true;
+            // 
+            // lblProbs
+            // 
+            this.lblProbs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblProbs.Location = new System.Drawing.Point(6, 8);
+            this.lblProbs.Margin = new System.Windows.Forms.Padding(3);
+            this.lblProbs.Name = "lblProbs";
+            this.lblProbs.Size = new System.Drawing.Size(640, 26);
+            this.lblProbs.TabIndex = 16;
+            this.lblProbs.Text = "These values specify the probabilities that a particular actor will be copied fro" +
+    "m a source map to the mixed map, depending on its type.";
             // 
             // frmMain
             // 
@@ -751,7 +767,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.grpInputFiles);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(700, 700);
+            this.MinimumSize = new System.Drawing.Size(640, 640);
             this.Name = "frmMain";
             this.Text = "Unreal Tournament Map Mixer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
@@ -830,6 +846,7 @@
         private System.Windows.Forms.TabPage tabExtras;
         private System.Windows.Forms.CheckBox chkSwapTex;
         private System.Windows.Forms.CheckBox chkSwapAct;
+        private System.Windows.Forms.Label lblProbs;
     }
 }
 
