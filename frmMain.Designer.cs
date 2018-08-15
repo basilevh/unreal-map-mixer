@@ -69,8 +69,8 @@
             this.lblTranslateCOG = new System.Windows.Forms.Label();
             this.chkTranslateCOG = new System.Windows.Forms.CheckBox();
             this.chkRemTrapPlay = new System.Windows.Forms.CheckBox();
-            this.radSmartOpen = new System.Windows.Forms.RadioButton();
-            this.radSmartClosed = new System.Windows.Forms.RadioButton();
+            this.radSmartAdd = new System.Windows.Forms.RadioButton();
+            this.radSmartSubtract = new System.Windows.Forms.RadioButton();
             this.radShuffled = new System.Windows.Forms.RadioButton();
             this.radOrdered = new System.Windows.Forms.RadioButton();
             this.lblMode = new System.Windows.Forms.Label();
@@ -547,7 +547,6 @@
             this.lblTranslateCOG.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTranslateCOG.AutoEllipsis = true;
-            this.lblTranslateCOG.Enabled = false;
             this.lblTranslateCOG.ForeColor = System.Drawing.Color.Gray;
             this.lblTranslateCOG.Location = new System.Drawing.Point(6, 141);
             this.lblTranslateCOG.Margin = new System.Windows.Forms.Padding(3, 0, 3, 6);
@@ -561,7 +560,6 @@
             // chkTranslateCOG
             // 
             this.chkTranslateCOG.AutoSize = true;
-            this.chkTranslateCOG.Enabled = false;
             this.chkTranslateCOG.Location = new System.Drawing.Point(6, 121);
             this.chkTranslateCOG.Name = "chkTranslateCOG";
             this.chkTranslateCOG.Size = new System.Drawing.Size(204, 17);
@@ -580,31 +578,32 @@
             this.chkRemTrapPlay.Text = "R&emove trapped PlayerStarts";
             this.chkRemTrapPlay.UseVisualStyleBackColor = true;
             // 
-            // radSmartOpen
+            // radSmartAdd
             // 
-            this.radSmartOpen.AutoSize = true;
-            this.radSmartOpen.Enabled = false;
-            this.radSmartOpen.Location = new System.Drawing.Point(49, 75);
-            this.radSmartOpen.Name = "radSmartOpen";
-            this.radSmartOpen.Size = new System.Drawing.Size(124, 17);
-            this.radSmartOpen.TabIndex = 11;
-            this.radSmartOpen.Text = "Smart O&pen-Map Mix";
-            this.radSmartOpen.UseVisualStyleBackColor = true;
+            this.radSmartAdd.AutoSize = true;
+            this.radSmartAdd.Enabled = false;
+            this.radSmartAdd.Location = new System.Drawing.Point(49, 75);
+            this.radSmartAdd.Name = "radSmartAdd";
+            this.radSmartAdd.Size = new System.Drawing.Size(136, 17);
+            this.radSmartAdd.TabIndex = 11;
+            this.radSmartAdd.Text = "Smart A&dditive-Map Mix";
+            this.radSmartAdd.UseVisualStyleBackColor = true;
             // 
-            // radSmartClosed
+            // radSmartSubtract
             // 
-            this.radSmartClosed.AutoSize = true;
-            this.radSmartClosed.Enabled = false;
-            this.radSmartClosed.Location = new System.Drawing.Point(49, 52);
-            this.radSmartClosed.Name = "radSmartClosed";
-            this.radSmartClosed.Size = new System.Drawing.Size(152, 17);
-            this.radSmartClosed.TabIndex = 10;
-            this.radSmartClosed.Text = "Smart S&ubtractive Map Mix";
-            this.radSmartClosed.UseVisualStyleBackColor = true;
+            this.radSmartSubtract.AutoSize = true;
+            this.radSmartSubtract.Enabled = false;
+            this.radSmartSubtract.Location = new System.Drawing.Point(49, 52);
+            this.radSmartSubtract.Name = "radSmartSubtract";
+            this.radSmartSubtract.Size = new System.Drawing.Size(152, 17);
+            this.radSmartSubtract.TabIndex = 10;
+            this.radSmartSubtract.Text = "Smart S&ubtractive Map Mix";
+            this.radSmartSubtract.UseVisualStyleBackColor = true;
             // 
             // radShuffled
             // 
             this.radShuffled.AutoSize = true;
+            this.radShuffled.Enabled = false;
             this.radShuffled.Location = new System.Drawing.Point(49, 29);
             this.radShuffled.Name = "radShuffled";
             this.radShuffled.Size = new System.Drawing.Size(83, 17);
@@ -660,9 +659,9 @@
             this.tabIntelligence.Controls.Add(this.chkKeepEventTag);
             this.tabIntelligence.Controls.Add(this.chkRemTrapPlay);
             this.tabIntelligence.Controls.Add(this.lblKeepWorldCons);
-            this.tabIntelligence.Controls.Add(this.radSmartOpen);
+            this.tabIntelligence.Controls.Add(this.radSmartAdd);
             this.tabIntelligence.Controls.Add(this.radOrdered);
-            this.tabIntelligence.Controls.Add(this.radSmartClosed);
+            this.tabIntelligence.Controls.Add(this.radSmartSubtract);
             this.tabIntelligence.Controls.Add(this.radShuffled);
             this.tabIntelligence.Location = new System.Drawing.Point(4, 22);
             this.tabIntelligence.Name = "tabIntelligence";
@@ -826,8 +825,8 @@
         private System.Windows.Forms.CheckBox chkKeepEventTag;
         private System.Windows.Forms.CheckBox chkKeepWorldCons;
         private System.Windows.Forms.Label lblKeepWorldCons;
-        private System.Windows.Forms.RadioButton radSmartOpen;
-        private System.Windows.Forms.RadioButton radSmartClosed;
+        private System.Windows.Forms.RadioButton radSmartAdd;
+        private System.Windows.Forms.RadioButton radSmartSubtract;
         private System.Windows.Forms.RadioButton radShuffled;
         private System.Windows.Forms.RadioButton radOrdered;
         private System.Windows.Forms.Label lblMode;

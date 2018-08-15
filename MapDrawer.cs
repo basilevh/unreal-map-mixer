@@ -14,9 +14,13 @@ namespace UnrealMapMixer
         public MapDrawer(UnrealMap map)
         {
             this.map = map;
+            zoom = Double.NaN;
         }
 
         private UnrealMap map;
+        private double zoom; // used by the UI for dragging
+
+        public double PixelsPerUnit => zoom;
 
         public void DrawLayout(Graphics gfx, int width, int height)
         {
@@ -31,7 +35,7 @@ namespace UnrealMapMixer
             double yMid = (yMin + yMax) / 2.0; // at the center of the display
             double xRan = xMax - xMin;
             double yRan = yMax - yMin;
-            double zoom = Math.Min(width / xRan, height / yRan) * 0.99; // pixels per world unit, set to 'Fill' mode
+            zoom = Math.Min(width / xRan, height / yRan) * 0.99; // pixels per world unit, set to 'Fill' mode
             var solidPen = new Pen(new SolidBrush(Color.FromArgb(64, 64, 255)));
             var semiSolidPen = new Pen(new SolidBrush(Color.FromArgb(255, 128, 0)));
             var nonSolidPen = new Pen(new SolidBrush(Color.FromArgb(0, 255, 0)));
@@ -39,6 +43,9 @@ namespace UnrealMapMixer
             var moverPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 255)));
             var unknownPen = new Pen(new SolidBrush(Color.FromArgb(128, 128, 128)));
             var actorPen = new Pen(new SolidBrush(Color.FromArgb(0, 255, 255)));
+            /*solidPen.DashPattern = new float[] { 1f, 1f };
+            subtractPen.DashPattern = new float[] { 1f, 1f };*/
+
             gfx.Clear(Color.Black);
 
             // Draw brushes

@@ -25,6 +25,26 @@ namespace UnrealMapMixer.Unreal
          */
 
         /// <summary>
+        /// Checks whether the given file represents a valid Unreal Tournament map in text format.
+        /// </summary>
+        /// <param name="path">Full path of the T3D file to be verified</param>
+        public static bool IsValidMap(string path)
+        {
+            if (!File.Exists(path))
+                return false;
+
+            var reader = new StreamReader(path);
+            string first;
+            do
+            {
+                first = reader.ReadLine();
+            } while (first.Length == 0);
+            reader.Close();
+
+            return first.StartsWith("Begin Map");
+        }
+
+        /// <summary>
         /// Collects all actors from a T3D representation.
         /// </summary>
         public static IEnumerable<UnrealActor> LoadActors(string text)

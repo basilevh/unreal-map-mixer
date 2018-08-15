@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using UnrealMapMixer.Mixers;
+using UnrealMapMixer.MyMath;
 using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer
@@ -21,27 +22,35 @@ namespace UnrealMapMixer
             // We are viewing an existing map
             InitializeComponent();
             this.map = map;
+
+            // Update controls
             Text = map.Title + " - Layout Top View";
+            pnlMixOnly.Visible = false;
 
-            btnRedo.Visible = false;
-            btnSave.Visible = false;
-
-            finalInit();
+            FinalInit();
         }
 
         public frmMapLayout(MapMixer mixer, MapMixParams mixParams)
         {
             // We are mixing into a new map
             InitializeComponent();
+            sourceMaps = mixer.Maps.ToArray();
             this.mixer = mixer;
             this.mixParams = mixParams;
+
+            // Perform mix
+            Mix();
+
+            // Update controls
             Text = "Mixed Map - Layout Top View";
-            mix();
-            
-            finalInit();
+            cmbSourceMap.Items.AddRange(sourceMaps.Select(m => Path.GetFileName(m.FilePath)).ToArray());
+            cmbSourceMap.SelectedIndex = 0;
+            UpdateSourceMapControls();
+
+            FinalInit();
         }
 
-        private void finalInit()
+        private void FinalInit()
         {
             // Set warning label visibility
             lblWarning.Visible = (map.Brushes.Any(b => b.IsRotated || b.IsScaled));
@@ -56,16 +65,17 @@ namespace UnrealMapMixer
             if (frmMain.UTPath != null)
                 outputSaveDialog.InitialDirectory = frmMain.UTPath;
 
-            drawLayout();
+            DrawLayout();
         }
-        
+
+        private UnrealMap[] sourceMaps; // mixing mode only
         private UnrealMap map;
         private MapMixer mixer;
         private MapMixParams mixParams;
         private MapDrawer drawer;
         private SaveFileDialog outputSaveDialog;
 
-        private void mix()
+        private void Mix()
         {
             if (mixer == null)
                 return;
@@ -74,9 +84,9 @@ namespace UnrealMapMixer
             map = mixer.Mix(mixParams);
         }
 
-        private void drawLayout()
+        private void DrawLayout()
         {
-            if (map == null)
+            if (map == null || picLayout.Width <= 0 || picLayout.Height <= 0)
                 return;
 
             drawer = new MapDrawer(map);
@@ -87,7 +97,7 @@ namespace UnrealMapMixer
 
         private void frmMapLayout_ResizeEnd(object sender, EventArgs e)
         {
-            drawLayout();
+            DrawLayout();
         }
 
         private void frmMapLayout_SizeChanged(object sender, EventArgs e)
@@ -98,13 +108,13 @@ namespace UnrealMapMixer
         private void tmrUpdate_Tick(object sender, EventArgs e)
         {
             tmrUpdate.Stop();
-            drawLayout();
+            DrawLayout();
         }
 
         private void btnRedo_Click(object sender, EventArgs e)
         {
-            mix();
-            drawLayout();
+            Mix();
+            DrawLayout();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -112,5 +122,87 @@ namespace UnrealMapMixer
             if (outputSaveDialog.ShowDialog() == DialogResult.OK)
                 File.WriteAllText(outputSaveDialog.FileName, map.Text);
         }
+
+        #region Source map controls
+
+        private void cmbSourceMap_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateSourceMapControls();
+        }
+
+        private void UpdateSourceMapControls()
+        {
+            if (mixer == null)
+                return;
+
+            string path = sourceMaps[cmbSourceMap.SelectedIndex].FilePath;
+            var offset = mixParams.MapOffsets[path];
+            numX.Value = (decimal)offset.X;
+            numY.Value = (decimal)offset.Y;
+            numZ.Value = (decimal)offset.Z;
+        }
+
+        private void numX_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateSourceMap();
+        }
+
+        private void numY_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateSourceMap();
+        }
+
+        private void numZ_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateSourceMap();
+        }
+
+        private void UpdateSourceMap()
+        {
+            if (mixer == null)
+                return;
+
+            string path = sourceMaps[cmbSourceMap.SelectedIndex].FilePath;
+            var offset = new Vector3D((double)numX.Value, (double)numY.Value, (double)numZ.Value);
+            mixParams.MapOffsets[path] = offset;
+
+            // TODO: move brushes (marked with source tag) in destination only,
+            // as this will mess up random generations
+            btnRedo_Click(null, null);
+        }
+
+        private bool dragging = false;
+        private int startX, startY;
+
+        private void picLayout_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mixer == null)
+                return;
+
+            if (e.Button == MouseButtons.Left && !dragging)
+            {
+                startX = e.X;
+                startY = e.Y;
+                dragging = true;
+            }
+            else if (dragging && e.Button != MouseButtons.Left)
+            {
+                dragging = false;
+                if (drawer == null)
+                    return;
+
+                // Add the dragged offset to the selected source map, rounding to multiples of 64 units
+                int deltaX = e.X - startX;
+                int deltaY = e.Y - startY;
+                double unitsX = deltaX / drawer.PixelsPerUnit;
+                double unitsY = deltaY / drawer.PixelsPerUnit;
+                decimal roundX = (decimal)(Math.Round(((double)numX.Value + unitsX) / 64.0) * 64.0);
+                decimal roundY = (decimal)(Math.Round(((double)numY.Value + unitsY) / 64.0) * 64.0);
+                numX.Value = Math.Min(Math.Max(roundX, numX.Minimum), numX.Maximum);
+                numY.Value = Math.Min(Math.Max(roundY, numY.Minimum), numY.Maximum);
+            }
+        }
+
+        #endregion
     }
 }

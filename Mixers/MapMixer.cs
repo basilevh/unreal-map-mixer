@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using UnrealMapMixer.MyMath;
 using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer.Mixers
@@ -25,8 +26,6 @@ namespace UnrealMapMixer.Mixers
                 "VacuumZone", "WarpZoneInfo", "WaterZone"
             });
 
-        protected static Random rnd = new Random();
-
         public MapMixer(IEnumerable<UnrealMap> maps)
         {
             this.maps = maps;
@@ -34,7 +33,38 @@ namespace UnrealMapMixer.Mixers
 
         protected IEnumerable<UnrealMap> maps;
 
-        public abstract UnrealMap Mix(MapMixParams mixParams);
+        public IEnumerable<UnrealMap> Maps => maps;
+
+        public UnrealMap Mix(MapMixParams mixParams)
+        {
+            // Preprocess the parameters first
+
+            // Fill in dictionaries to prevent exceptions
+            foreach (var map in maps)
+            {
+                if (!mixParams.MapOffsets.ContainsKey(map.FilePath))
+                    mixParams.MapOffsets[map.FilePath] = new Vector3D();
+            }
+
+            // If 'Translate to common COG' is enabled,
+            // then override all map offsets with the relevant value.
+            if (mixParams.TranslateCommonCOG)
+            {
+                foreach (var map in maps)
+                {
+                    var cog = map.CalcCenterOfGravity();
+                    mixParams.MapOffsets[map.FilePath] = new Vector3D(-cog.X, -cog.Y, -cog.Z);
+                }
+                mixParams.TranslateCommonCOG = false; // considered done now
+            }
+            
+
+            return _Mix(mixParams);
+        }
+
+        protected abstract UnrealMap _Mix(MapMixParams mixParams);
+
+        protected static Random rnd = new Random();
 
         /// <summary>
         /// Runs a random experiment (binomial trial) with a boolean outcome.

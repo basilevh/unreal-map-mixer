@@ -20,7 +20,7 @@ namespace UnrealMapMixer.Mixers
 
         // TODO: DRY
 
-        public override UnrealMap Mix(MapMixParams mixParams)
+        protected override UnrealMap _Mix(MapMixParams mixParams)
         {
             var destMap = new UnrealMap();
 
@@ -28,16 +28,12 @@ namespace UnrealMapMixer.Mixers
             var allActors = new List<UnrealActor>();
             foreach (var map in maps)
             {
-                Vector3D offset;
-                if (mixParams.TranslateCommonCOG)
-                {
-                    var cog = map.CalcCenterOfGravity();
-                    offset = new Vector3D(-cog.X, -cog.Y, -cog.Z).Round(TranslateCOGStep);
-                }
-                else
-                    offset = new Vector3D();
+                var offset = mixParams.MapOffsets[map.FilePath];
+
                 allActors.AddRange(map.Actors.Select(a => a.Duplicate(offset)));
             }
+
+            // TODO: transfer brushes separately, otherwise they lose their UnrealBrush status!
 
             // Pick actors randomly
             var mixActors = new List<UnrealActor>();
@@ -48,6 +44,8 @@ namespace UnrealMapMixer.Mixers
                     continue;
                 if (mixParams.ExcludeMore && mixParams.ExcludeMoreNames.Contains(actor.Class))
                     continue;
+
+                // TODO: check brush probabilities
 
                 // Get probability
                 double prob;

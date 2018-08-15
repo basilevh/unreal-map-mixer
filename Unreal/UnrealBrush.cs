@@ -51,12 +51,13 @@ namespace UnrealMapMixer.Unreal
         public new UnrealBrush Duplicate() => new UnrealBrush(this);
 
         /// <summary>
-        /// Creates a copy of this actor, translated by the given offset.
+        /// Creates a copy of this brush, translated by the given offset.
         /// </summary>
         public new UnrealBrush Duplicate(Vector3D translateOffset)
         {
             var result = new UnrealBrush(this);
-            result.Translate(translateOffset);
+            if (!translateOffset.IsZero())
+                result.Translate(translateOffset);
             return result;
         }
 

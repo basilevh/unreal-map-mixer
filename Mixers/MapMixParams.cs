@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnrealMapMixer.MyMath;
+using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer.Mixers
 {
@@ -26,5 +28,8 @@ namespace UnrealMapMixer.Mixers
         // Excluded actors
         public bool ExcludeInvisible, ExcludePortal, ExcludeZoneInfo, ExcludeMore;
         public IEnumerable<string> ExcludeMoreNames;
+
+        // Source map-specific parameters
+        public IDictionary<string, Vector3D> MapOffsets;
     }
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using UnrealMapMixer.Mixers;
+using UnrealMapMixer.MyMath;
 using UnrealMapMixer.Unreal;
 
 namespace UnrealMapMixer
@@ -55,21 +56,14 @@ namespace UnrealMapMixer
             lvwSourceFiles.Items.Clear();
             if (settings.InputFiles != null)
                 foreach (string path in settings.InputFiles)
-                    if (File.Exists(path))
-                    {
-                        string text = File.ReadAllText(path);
-                        if (text.StartsWith("Begin Map"))
-                        {
-                            sourceMaps[path] = UnrealMap.FromText(text);
-                            lvwSourceFiles.Items.Add(createItemFromFile(path));
-                        }
-                    }
+                    if (T3DParser.IsValidMap(path))
+                        addMap(path);
 
             // Intelligence
             radOrdered.Checked = (settings.Mode == 0);
             radShuffled.Checked = (settings.Mode == 1);
-            radSmartClosed.Checked = (settings.Mode == 2);
-            radSmartOpen.Checked = (settings.Mode == 3);
+            radSmartSubtract.Checked = (settings.Mode == 2);
+            radSmartAdd.Checked = (settings.Mode == 3);
 
             // Probabilities
             numSolid.Value = settings.SolidProb;
@@ -98,7 +92,7 @@ namespace UnrealMapMixer
 
             // Intelligence
             settings.Mode = (radOrdered.Checked ? 0 : radShuffled.Checked ? 1
-                : radSmartClosed.Checked ? 2 : 3);
+                : radSmartSubtract.Checked ? 2 : 3);
 
             // Probabilities
             settings.SolidProb = numSolid.Value;
@@ -118,16 +112,6 @@ namespace UnrealMapMixer
             settings.ExcludedActors.AddRange(txtExcludeActors.Lines);
 
             settings.Save();
-        }
-
-        private ListViewItem createItemFromFile(string path)
-        {
-            var map = UnrealMap.FromText(File.ReadAllText(path));
-            string title = map.Title;
-            string author = map.Author;
-            string type = (map.Type.ToString() != "Unknown" ? map.Type.ToString() : "");
-            var item = new ListViewItem(new string[] { path, title, author, type });
-            return item;
         }
 
         private void btnGenerate_Click(object sender, EventArgs e)
@@ -153,11 +137,13 @@ namespace UnrealMapMixer
             // Get mixing parameters
             var mixParams = new MapMixParams()
             {
+                // Intelligence
                 RemoveTrappedPlayerStarts = chkRemTrapPlay.Checked,
                 TranslateCommonCOG = chkTranslateCOG.Checked,
                 KeepEventTagLinks = chkKeepEventTag.Checked,
                 KeepWorldConnections = chkKeepWorldCons.Checked,
                 ExpandPortals = chkExpandPortals.Checked,
+                // Probabilities
                 SolidProb = (double)numSolid.Value / 100.0,
                 SemiSolidProb = (double)numSemiSolid.Value / 100.0,
                 NonSolidProb = (double)numNonSolid.Value / 100.0,
@@ -165,11 +151,14 @@ namespace UnrealMapMixer
                 MoverProb = (double)numMover.Value / 100.0,
                 LightProb = (double)numLight.Value / 100.0,
                 OtherProb = (double)numOther.Value / 100.0,
+                // Excluded actors
                 ExcludeInvisible = chkExInvis.Checked,
                 ExcludePortal = chkExPortal.Checked,
                 ExcludeZoneInfo = chkExZoneInfo.Checked,
                 ExcludeMore = chkExMore.Checked,
-                ExcludeMoreNames = txtExcludeActors.Lines.Where(s => s.Length != 0)
+                ExcludeMoreNames = txtExcludeActors.Lines.Where(s => s.Length != 0),
+                // Source map-specific parameters
+                MapOffsets = new Dictionary<string, Vector3D>()
             };
 
             // Show layout form (responsible for starting and saving the mix)
@@ -180,30 +169,17 @@ namespace UnrealMapMixer
         private void btnAdd_Click(object sender, EventArgs e)
         {
             if (inputOpenDialog.ShowDialog() == DialogResult.OK)
-            {
-                // Replace the list of files with those just selected
+                // Add the list of selected files
                 foreach (string path in inputOpenDialog.FileNames)
-                {
-                    string text = File.ReadAllText(path);
-                    if (text.StartsWith("Begin Map"))
-                    {
-                        sourceMaps[path] = UnrealMap.FromText(text);
-                        lvwSourceFiles.Items.Add(createItemFromFile(path));
-                    }
-                }
-            }
+                    if (T3DParser.IsValidMap(path))
+                        addMap(path);
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
         {
             var paths = lvwSourceFiles.SelectedItems?.Cast<ListViewItem>().Select(i => i.Text);
             foreach (string path in paths)
-            {
-                sourceMaps.Remove(path);
-                foreach (var item in lvwSourceFiles.Items.Cast<ListViewItem>())
-                    if (item.Text == path)
-                        item.Remove();
-            }
+                removeMap(path);
         }
 
         private void btnView_Click(object sender, EventArgs e)
@@ -219,6 +195,25 @@ namespace UnrealMapMixer
         private void lvwSourceFiles_DoubleClick(object sender, EventArgs e)
         {
             btnView_Click(sender, e);
+        }
+
+        private void addMap(string path)
+        {
+            var map = UnrealMap.FromFile(path);
+            sourceMaps[path] = map;
+            string title = map.Title;
+            string author = map.Author;
+            string type = (map.Type.ToString() != "Unknown" ? map.Type.ToString() : "");
+            var item = new ListViewItem(new string[] { path, title, author, type });
+            lvwSourceFiles.Items.Add(item);
+        }
+
+        private void removeMap(string path)
+        {
+            sourceMaps.Remove(path);
+            foreach (var item in lvwSourceFiles.Items.Cast<ListViewItem>())
+                if (item.Text == path)
+                    item.Remove();
         }
 
         private static string FindUTPath()
@@ -259,10 +254,10 @@ namespace UnrealMapMixer
         private static bool isUTPath(string folder)
         {
             // Check if both a 'Maps' and 'System' directory exist, and there is at least one UNR file in 'Maps'
-            return (folder.Contains("Tournament")
+            return (folder.Contains("Tournament") || folder.Contains("99"))
                 && Directory.Exists(folder + "\\Maps")
                 && Directory.Exists(folder + "\\System")
-                && Directory.GetFiles(folder + "\\Maps").Any(s => s.EndsWith(".unr")));
+                && Directory.GetFiles(folder + "\\Maps").Any(s => s.EndsWith(".unr"));
         }
     }
 }

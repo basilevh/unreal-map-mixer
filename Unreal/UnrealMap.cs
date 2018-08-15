@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using UnrealMapMixer.MyMath;
@@ -24,11 +25,13 @@ namespace UnrealMapMixer.Unreal
         /// </summary>
         public UnrealMap() : base()
         {
-            title = "New UMM Map";
+            filePath = "N/A"; // a map created inside this program never has a file path
+            title = "New UMM Map"; // can be changed later
         }
 
         protected UnrealMap(UnrealMap map) : base(map)
         {
+            filePath = map.filePath;
             title = map.title;
             author = map.author;
             song = map.song;
@@ -39,8 +42,10 @@ namespace UnrealMapMixer.Unreal
             brushCount = map.brushCount;
         }
 
-        protected UnrealMap(string text) : base(text)
-        { }
+        protected UnrealMap(string fileName, string text) : base(text)
+        {
+            this.filePath = fileName;
+        }
 
         /// <summary>
         /// Creates a modifiable deep copy of this map.
@@ -48,11 +53,16 @@ namespace UnrealMapMixer.Unreal
         public UnrealMap Duplicate() => new UnrealMap(this);
 
         /// <summary>
-        /// Creates a read-only instance of a map.
+        /// Creates a read-only instance of an existing map.
         /// </summary>
-        /// <param name="text">T3D file contents to be parsed</param>
-        public static UnrealMap FromText(string text) => new UnrealMap(text);
+        /// <param name="path">Full path of the T3D file to be parsed</param>
+        public static UnrealMap FromFile(string path)
+        {
+            string text = File.ReadAllText(path);
+            return new UnrealMap(path, text);
+        }
 
+        private readonly string filePath; // excluding directories, including extension
         private UnrealActor levelInfo;
         private string title; // excluding quotes
         private string author; // excluding quotes
@@ -62,6 +72,8 @@ namespace UnrealMapMixer.Unreal
         private List<UnrealBrush> brushes = new List<UnrealBrush>();
         private int actorCount = 0;
         private int brushCount = 0;
+
+        public string FilePath => filePath;
 
         public string Title
         {

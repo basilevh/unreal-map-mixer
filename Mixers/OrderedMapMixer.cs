@@ -21,7 +21,7 @@ namespace UnrealMapMixer.Mixers
 
         // TODO: DRY
 
-        public override UnrealMap Mix(MapMixParams mixParams)
+        protected override UnrealMap _Mix(MapMixParams mixParams)
         {
             var destMap = new UnrealMap();
 
@@ -30,14 +30,7 @@ namespace UnrealMapMixer.Mixers
             var allActors = new List<UnrealActor>(); // excluding brushes
             foreach (var map in maps)
             {
-                Vector3D offset;
-                if (mixParams.TranslateCommonCOG)
-                {
-                    var cog = map.CalcCenterOfGravity();
-                    offset = new Vector3D(-cog.X, -cog.Y, -cog.Z);
-                }
-                else
-                    offset = new Vector3D();
+                var offset = mixParams.MapOffsets[map.FilePath];
 
                 brushRanks.AddRange(map.Brushes
                     .Select(
