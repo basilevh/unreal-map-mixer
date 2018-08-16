@@ -153,7 +153,7 @@ namespace UnrealMapMixer.Unreal
                     brushes.Add(actor as UnrealBrush);
                 }
                 actors.Add(actor);
-                actor.Owner = this;
+                actor.AddOwner(this);
             }
         }
 
@@ -166,7 +166,7 @@ namespace UnrealMapMixer.Unreal
                 if (actor is UnrealBrush)
                     brushes.Remove(actor as UnrealBrush);
                 actors.Remove(actor);
-                actor.Owner = null;
+                actor.RemoveOwner(this);
             }
         }
 

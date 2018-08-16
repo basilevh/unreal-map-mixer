@@ -28,7 +28,8 @@ namespace UnrealMapMixer.Unreal
             Name = actor.Name;
             Location = actor.Location;
             Rotation = actor.Rotation;
-            // This duplicated actor has no owner (yet)
+            // Copy all ownership information as well, despite this object possibly getting changed!
+            owners.AddRange(actor.owners);
         }
 
         protected UnrealActor(string text) : base(text)
@@ -44,6 +45,8 @@ namespace UnrealMapMixer.Unreal
         /// </summary>
         /// <param name="text">T3D representation to be parsed</param>
         public static UnrealActor FromText(string text) => new UnrealActor(text);
+
+        private List<UnrealMap> owners = new List<UnrealMap>();
 
         private Dictionary<string, string> properties = new Dictionary<string, string>();
 
@@ -66,7 +69,25 @@ namespace UnrealMapMixer.Unreal
 
         public bool IsRotated => (Rotation.Pitch != 0.0 || Rotation.Yaw != 0.0 || Rotation.Roll != 0.0);
 
-        public UnrealMap Owner { get; internal set; } = null; // taken care of by UnrealMap
+        /// <summary>
+        /// The map instances that contain this actor; there may be multiple because
+        /// any actor may belong to a source map as well as destination maps.
+        /// The list is sorted by the chronological order this actor was last added to the maps.
+        /// </summary>
+        public IEnumerable<UnrealMap> Owners => owners;
+
+        // Taken care of by UnrealMap
+        internal void AddOwner(UnrealMap map)
+        {
+            // Ensure that the newest owner is the latest item in the list
+            owners.Remove(map);
+            owners.Add(map);
+        }
+
+        internal void RemoveOwner(UnrealMap map)
+        {
+            owners.Remove(map);
+        }
 
         #region Text handling
 

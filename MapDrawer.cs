@@ -47,7 +47,7 @@ namespace UnrealMapMixer
             double yMid = (yMin + yMax) / 2.0; // at the center of the display
             double xRan = xMax - xMin;
             double yRan = yMax - yMin;
-            zoom = Math.Min(width / xRan, height / yRan) * 0.99; // pixels per world unit, set to 'Fill' mode
+            zoom = Math.Min(width / xRan, height / yRan) * 0.98; // pixels per world unit, set to 'Fill' mode
             var solidPen = new Pen(new SolidBrush(Color.FromArgb(64, 64, 255)));
             var semiSolidPen = new Pen(new SolidBrush(Color.FromArgb(255, 128, 0)));
             var nonSolidPen = new Pen(new SolidBrush(Color.FromArgb(0, 255, 0)));
@@ -55,8 +55,8 @@ namespace UnrealMapMixer
             var moverPen = new Pen(new SolidBrush(Color.FromArgb(255, 0, 255)));
             var unknownPen = new Pen(new SolidBrush(Color.FromArgb(128, 128, 128)));
             var actorPen = new Pen(new SolidBrush(Color.FromArgb(0, 255, 255)));
-            var importantPen = new Pen(new SolidBrush(Color.FromArgb(0, 224, 224, 224)));
-            var draggedPen = new Pen(new SolidBrush(Color.FromArgb(0, 192, 192, 192)));
+            var importantPen = new Pen(new SolidBrush(Color.FromArgb(255, 255, 255)));
+            var draggedPen = new Pen(new SolidBrush(Color.FromArgb(224, 224, 224)));
             draggedPen.DashPattern = new float[] { 1f, 1f };
 
             gfx.Clear(Color.Black);
@@ -66,9 +66,9 @@ namespace UnrealMapMixer
             {
                 // Determine pen to use
                 Pen usedPen;
-                if (brush.Owner == importantMap)
+                if (brush.Owners.Contains(importantMap))
                     usedPen = importantPen;
-                else if (brush.Owner == draggedMap)
+                else if (brush.Owners.Contains(draggedMap))
                     usedPen = draggedPen;
                 else
                     switch (brush.Operation)
@@ -99,9 +99,9 @@ namespace UnrealMapMixer
             {
                 // Determine pen to use
                 Pen usedPen;
-                if (actor.Owner == importantMap)
+                if (actor.Owners.Contains(importantMap))
                     usedPen = importantPen;
-                else if (actor.Owner == draggedMap)
+                else if (actor.Owners.Contains(draggedMap))
                     usedPen = draggedPen;
                 else
                     usedPen = actorPen;

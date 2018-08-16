@@ -169,6 +169,7 @@ namespace UnrealMapMixer
             // Mark the selected source map by a short flash
             importantMap = sourceMaps[cmbSourceMap.SelectedIndex];
             DrawLayout();
+            tmrFlash.Stop();
             tmrFlash.Start();
         }
 

@@ -334,7 +334,7 @@
             // 
             // tmrFlash
             // 
-            this.tmrFlash.Interval = 750;
+            this.tmrFlash.Interval = 600;
             this.tmrFlash.Tick += new System.EventHandler(this.tmrFlash_Tick);
             // 
             // frmMapLayout

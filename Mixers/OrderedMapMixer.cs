@@ -40,8 +40,6 @@ namespace UnrealMapMixer.Mixers
                 allActors.AddRange(map.Actors
                     .Where(a => !(a is UnrealBrush))
                     .Select(a => UnrealActorFactory.Duplicate(a, offset)));
-
-                new UnrealBrush().Duplicate();
             }
 
             // Merge all brushes
