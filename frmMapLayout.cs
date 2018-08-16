@@ -73,6 +73,8 @@ namespace UnrealMapMixer
         private MapMixer mixer;
         private MapMixParams mixParams;
         private MapDrawer drawer;
+        private Bitmap bitmap;
+        private UnrealMap importantMap = null, draggedMap = null;
         private SaveFileDialog outputSaveDialog;
 
         private void Mix()
@@ -82,6 +84,8 @@ namespace UnrealMapMixer
 
             // Perform mix
             map = mixer.Mix(mixParams);
+
+            DrawLayout();
         }
 
         private void DrawLayout()
@@ -89,11 +93,39 @@ namespace UnrealMapMixer
             if (map == null || picLayout.Width <= 0 || picLayout.Height <= 0)
                 return;
 
-            drawer = new MapDrawer(map);
-            var bmp = new Bitmap(picLayout.Width, picLayout.Height);
-            drawer.DrawLayout(Graphics.FromImage(bmp), picLayout.Width, picLayout.Height);
-            picLayout.Image = bmp;
+            // Recreate bitmap if needed
+            if (bitmap == null || bitmap.Width != picLayout.Width || bitmap.Height != picLayout.Height)
+                bitmap = new Bitmap(picLayout.Width, picLayout.Height);
+
+            // Get correct view
+            MapDrawer.View view;
+            if (radTop.Checked)
+                view = MapDrawer.View.Top;
+            else if (radFront.Checked)
+                view = MapDrawer.View.Front;
+            else
+                view = MapDrawer.View.Side;
+
+            // Draw layout
+            if (drawer == null)
+                drawer = new MapDrawer(map);
+            drawer.DrawLayout(Graphics.FromImage(bitmap), bitmap.Width, bitmap.Height,
+                view, importantMap, draggedMap);
+            picLayout.Image = bitmap;
         }
+
+        private void btnRedo_Click(object sender, EventArgs e)
+        {
+            Mix();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (outputSaveDialog.ShowDialog() == DialogResult.OK)
+                File.WriteAllText(outputSaveDialog.FileName, map.Text);
+        }
+
+        #region Layout drawing details
 
         private void frmMapLayout_ResizeEnd(object sender, EventArgs e)
         {
@@ -111,23 +143,33 @@ namespace UnrealMapMixer
             DrawLayout();
         }
 
-        private void btnRedo_Click(object sender, EventArgs e)
+        private void radTop_CheckedChanged(object sender, EventArgs e)
         {
-            Mix();
             DrawLayout();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void radFront_CheckedChanged(object sender, EventArgs e)
         {
-            if (outputSaveDialog.ShowDialog() == DialogResult.OK)
-                File.WriteAllText(outputSaveDialog.FileName, map.Text);
+            DrawLayout();
         }
+
+        private void radSide_CheckedChanged(object sender, EventArgs e)
+        {
+            DrawLayout();
+        }
+
+        #endregion
 
         #region Source map controls
 
         private void cmbSourceMap_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSourceMapControls();
+
+            // Mark the selected source map by a short flash
+            importantMap = sourceMaps[cmbSourceMap.SelectedIndex];
+            DrawLayout();
+            tmrFlash.Start();
         }
 
         private void UpdateSourceMapControls()
@@ -140,6 +182,13 @@ namespace UnrealMapMixer
             numX.Value = (decimal)offset.X;
             numY.Value = (decimal)offset.Y;
             numZ.Value = (decimal)offset.Z;
+        }
+
+        private void tmrFlash_Tick(object sender, EventArgs e)
+        {
+            tmrFlash.Stop();
+            importantMap = null;
+            DrawLayout();
         }
 
         private void numX_ValueChanged(object sender, EventArgs e)
@@ -168,7 +217,7 @@ namespace UnrealMapMixer
 
             // TODO: move brushes (marked with source tag) in destination only,
             // as this will mess up random generations
-            btnRedo_Click(null, null);
+            Mix();
         }
 
         private bool dragging = false;

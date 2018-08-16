@@ -30,10 +30,8 @@ namespace UnrealMapMixer.Mixers
             {
                 var offset = mixParams.MapOffsets[map.FilePath];
 
-                allActors.AddRange(map.Actors.Select(a => a.Duplicate(offset)));
+                allActors.AddRange(map.Actors.Select(a => UnrealActorFactory.Duplicate(a, offset)));
             }
-
-            // TODO: transfer brushes separately, otherwise they lose their UnrealBrush status!
 
             // Pick actors randomly
             var mixActors = new List<UnrealActor>();

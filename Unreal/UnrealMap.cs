@@ -25,26 +25,25 @@ namespace UnrealMapMixer.Unreal
         /// </summary>
         public UnrealMap() : base()
         {
-            filePath = "N/A"; // a map created inside this program never has a file path
+            FilePath = "N/A"; // a map created inside this program never has a file path
             title = "New UMM Map"; // can be changed later
         }
 
         protected UnrealMap(UnrealMap map) : base(map)
         {
-            filePath = map.filePath;
+            FilePath = map.FilePath;
             title = map.title;
             author = map.author;
             song = map.song;
-            type = map.type;
-            actors = map.actors.Select(a => a.Duplicate()).ToList();
-            brushes = map.brushes.Select(b => b.Duplicate()).ToList();
-            actorCount = map.actorCount;
-            brushCount = map.brushCount;
+            Type = map.Type;
+            // Duplicate actors sequentially; brushes and ownership will be handled correctly this way
+            foreach (var actor in map.Actors)
+                AddActor(UnrealActorFactory.Duplicate(actor));
         }
 
         protected UnrealMap(string fileName, string text) : base(text)
         {
-            this.filePath = fileName;
+            this.FilePath = fileName;
         }
 
         /// <summary>
@@ -62,18 +61,14 @@ namespace UnrealMapMixer.Unreal
             return new UnrealMap(path, text);
         }
 
-        private readonly string filePath; // excluding directories, including extension
         private UnrealActor levelInfo;
         private string title; // excluding quotes
         private string author; // excluding quotes
         private string song; // excluding Music'...'
-        private MapType type = MapType.Unknown;
         private List<UnrealActor> actors = new List<UnrealActor>();
         private List<UnrealBrush> brushes = new List<UnrealBrush>();
-        private int actorCount = 0;
-        private int brushCount = 0;
 
-        public string FilePath => filePath;
+        public string FilePath { get; }
 
         public string Title
         {
@@ -88,7 +83,7 @@ namespace UnrealMapMixer.Unreal
                 else
                 {
                     title = value;
-                    levelInfo.SetProperty("Title", value);
+                    levelInfo.SetProperty("Title", value); // TODO: correct
                     textDirty = true;
                 }
             }
@@ -107,7 +102,7 @@ namespace UnrealMapMixer.Unreal
                 else
                 {
                     author = value;
-                    levelInfo.SetProperty("Author", value);
+                    levelInfo.SetProperty("Author", value); // TODO: correct
                     textDirty = true;
                 }
             }
@@ -126,21 +121,21 @@ namespace UnrealMapMixer.Unreal
                 else
                 {
                     title = value;
-                    levelInfo.SetProperty("Song", value);
+                    levelInfo.SetProperty("Song", value); // TODO: correct
                     textDirty = true;
                 }
             }
         }
 
-        public MapType Type => type;
+        public MapType Type { get; private set; } = MapType.Unknown;
 
         public IEnumerable<UnrealActor> Actors => actors;
 
         public IEnumerable<UnrealBrush> Brushes => brushes;
 
-        public int ActorCount => actorCount;
+        public int ActorCount => actors.Count;
 
-        public int BrushCount => brushCount;
+        public int BrushCount => brushes.Count;
 
         public void AddActor(UnrealActor actor)
         {
@@ -149,16 +144,29 @@ namespace UnrealMapMixer.Unreal
             else
             {
                 if (actor is UnrealBrush)
+                // if (actor.Class == "Brush" || actor.Class == "Mover") // TODO: test
                 {
                     if ((actor as UnrealBrush).Polygons.Count() == 0)
-                        // This brush is invalid
+                        // This brush is invalid, so ignore it
                         return;
 
                     brushes.Add(actor as UnrealBrush);
-                    brushCount++;
                 }
                 actors.Add(actor);
-                actorCount++;
+                actor.Owner = this;
+            }
+        }
+
+        public void RemoveActor(UnrealActor actor)
+        {
+            if (isReadOnly)
+                throw new InvalidOperationException("This map cannot be modified because it is read-only");
+            else
+            {
+                if (actor is UnrealBrush)
+                    brushes.Remove(actor as UnrealBrush);
+                actors.Remove(actor);
+                actor.Owner = null;
             }
         }
 
@@ -203,19 +211,19 @@ namespace UnrealMapMixer.Unreal
         private void loadType()
         {
             // TODO: implement heuristic that checks for a big subtracted brush
-            type = MapType.Unknown;
+            Type = MapType.Unknown;
         }
 
         #endregion
 
         #region Text handling
 
-        protected override string generateText()
+        protected override string GenerateText()
         {
             return T3DParser.GenerateText(this);
         }
 
-        protected override void loadText(string text)
+        protected override void LoadText(string text)
         {
             foreach (var actor in T3DParser.LoadActors(text))
                 AddActor(actor);

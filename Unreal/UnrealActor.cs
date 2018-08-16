@@ -24,10 +24,11 @@ namespace UnrealMapMixer.Unreal
         protected UnrealActor(UnrealActor actor) : base(actor)
         {
             properties = new Dictionary<string, string>(actor.properties);
-            actorClass = actor.actorClass;
-            actorName = actor.actorName;
-            location = actor.location;
-            rotation = actor.rotation;
+            Class = actor.Class;
+            Name = actor.Name;
+            Location = actor.Location;
+            Rotation = actor.Rotation;
+            // This duplicated actor has no owner (yet)
         }
 
         protected UnrealActor(string text) : base(text)
@@ -36,18 +37,7 @@ namespace UnrealMapMixer.Unreal
         /// <summary>
         /// Creates a modifiable deep copy of this actor.
         /// </summary>
-        public UnrealActor Duplicate() => new UnrealActor(this);
-
-        /// <summary>
-        /// Creates a copy of this actor, translated by the given offset.
-        /// </summary>
-        public UnrealActor Duplicate(Vector3D translateOffset)
-        {
-            var result = new UnrealActor(this);
-            if (!translateOffset.IsZero())
-                result.Translate(translateOffset);
-            return result;
-        }
+        internal UnrealActor Duplicate() => new UnrealActor(this);
 
         /// <summary>
         /// Creates a read-only instance of an actor.
@@ -55,15 +45,11 @@ namespace UnrealMapMixer.Unreal
         /// <param name="text">T3D representation to be parsed</param>
         public static UnrealActor FromText(string text) => new UnrealActor(text);
 
-        private string actorClass;
-        private string actorName;
         private Dictionary<string, string> properties = new Dictionary<string, string>();
-        private Point3D location = new Point3D();
-        private Rotation3D rotation = new Rotation3D();
 
-        public string Class => actorClass;
+        public string Class { get; private set; }
 
-        public string Name => actorName;
+        public string Name { get; private set; }
 
         public IEnumerable<KeyValuePair<string, string>> Properties => properties;
 
@@ -74,20 +60,22 @@ namespace UnrealMapMixer.Unreal
             properties[key] = value;
         }
 
-        public Point3D Location => location;
+        public Point3D Location { get; private set; } = new Point3D();
 
-        public Rotation3D Rotation => rotation;
+        public Rotation3D Rotation { get; private set; } = new Rotation3D();
 
-        public bool IsRotated => (rotation.Pitch != 0.0 || rotation.Yaw != 0.0 || rotation.Roll != 0.0);
+        public bool IsRotated => (Rotation.Pitch != 0.0 || Rotation.Yaw != 0.0 || Rotation.Roll != 0.0);
+
+        public UnrealMap Owner { get; internal set; } = null; // taken care of by UnrealMap
 
         #region Text handling
 
-        protected override string generateText()
+        protected override string GenerateText()
         {
             return T3DParser.GenerateText(this);
         }
 
-        protected override void loadText(string text)
+        protected override void LoadText(string text)
         {
             string firstLine = new StringReader(text).ReadLine();
             int classStart = firstLine.IndexOf("Class=", "Begin Actor ".Length);
@@ -97,30 +85,30 @@ namespace UnrealMapMixer.Unreal
             int classLength = nameStart - 1 - classEnd;
             int nameLength = firstLine.Length - nameEnd;
 
-            actorClass = text.Substring(classEnd, classLength);
-            actorName = text.Substring(nameEnd, nameLength);
+            Class = text.Substring(classEnd, classLength);
+            Name = text.Substring(nameEnd, nameLength);
             properties = T3DParser.GetProperties(text).ToDictionary(p => p.Key, p => p.Value);
-            loadPosition();
+            LoadPosition();
         }
 
-        private void loadPosition()
+        private void LoadPosition()
         {
             properties.TryGetValue("Location", out string loc);
             properties.TryGetValue("Rotation", out string rot);
 
             // Assign location
             if (loc != null)
-                location = Point3D.FromProperty(loc);
+                Location = Point3D.FromProperty(loc);
             else
                 // No location supplied, so return the default = all zero
-                location = new Point3D(0.0, 0.0, 0.0);
+                Location = new Point3D(0.0, 0.0, 0.0);
 
             // Assign rotation
             if (rot != null)
-                rotation = Rotation3D.FromProperty(rot);
+                Rotation = Rotation3D.FromProperty(rot);
             else
                 // No rotation supplied, so return the default = all zero
-                rotation = new Rotation3D(0.0, 0.0, 0.0);
+                Rotation = new Rotation3D(0.0, 0.0, 0.0);
         }
 
         #endregion
@@ -130,7 +118,7 @@ namespace UnrealMapMixer.Unreal
             if (isReadOnly)
                 throw new InvalidOperationException("This map cannot be modified because it is read-only");
 
-            location = location.Add(offset);
+            Location = Location.Add(offset);
         }
     }
 }

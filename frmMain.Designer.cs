@@ -603,7 +603,6 @@
             // radShuffled
             // 
             this.radShuffled.AutoSize = true;
-            this.radShuffled.Enabled = false;
             this.radShuffled.Location = new System.Drawing.Point(49, 29);
             this.radShuffled.Name = "radShuffled";
             this.radShuffled.Size = new System.Drawing.Size(83, 17);

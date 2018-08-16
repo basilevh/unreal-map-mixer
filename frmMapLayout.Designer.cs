@@ -45,21 +45,27 @@
             this.lblX = new System.Windows.Forms.Label();
             this.cmbSourceMap = new System.Windows.Forms.ComboBox();
             this.lblSourceMap = new System.Windows.Forms.Label();
+            this.pnlView = new System.Windows.Forms.Panel();
+            this.radFront = new System.Windows.Forms.RadioButton();
+            this.radTop = new System.Windows.Forms.RadioButton();
+            this.radSide = new System.Windows.Forms.RadioButton();
+            this.tmrFlash = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.picLayout)).BeginInit();
             this.pnlWarning.SuspendLayout();
             this.pnlMixOnly.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numZ)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numX)).BeginInit();
+            this.pnlView.SuspendLayout();
             this.SuspendLayout();
             // 
             // picLayout
             // 
             this.picLayout.BackColor = System.Drawing.Color.Black;
             this.picLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picLayout.Location = new System.Drawing.Point(0, 0);
+            this.picLayout.Location = new System.Drawing.Point(0, 36);
             this.picLayout.Name = "picLayout";
-            this.picLayout.Size = new System.Drawing.Size(784, 489);
+            this.picLayout.Size = new System.Drawing.Size(784, 453);
             this.picLayout.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.picLayout.TabIndex = 0;
             this.picLayout.TabStop = false;
@@ -73,7 +79,7 @@
             this.lblWarning.Location = new System.Drawing.Point(0, 0);
             this.lblWarning.Name = "lblWarning";
             this.lblWarning.Size = new System.Drawing.Size(784, 36);
-            this.lblWarning.TabIndex = 1;
+            this.lblWarning.TabIndex = 0;
             this.lblWarning.Text = "Warning: this layout might be inaccurate because there is MainScale / PostScale /" +
     " Rotation information present, which is not yet fully supported by the applicati" +
     "on.";
@@ -93,7 +99,7 @@
             this.pnlWarning.Location = new System.Drawing.Point(0, 489);
             this.pnlWarning.Name = "pnlWarning";
             this.pnlWarning.Size = new System.Drawing.Size(784, 36);
-            this.pnlWarning.TabIndex = 2;
+            this.pnlWarning.TabIndex = 1;
             // 
             // btnRedo
             // 
@@ -102,7 +108,7 @@
             this.btnRedo.Location = new System.Drawing.Point(616, 6);
             this.btnRedo.Name = "btnRedo";
             this.btnRedo.Size = new System.Drawing.Size(80, 27);
-            this.btnRedo.TabIndex = 3;
+            this.btnRedo.TabIndex = 8;
             this.btnRedo.Text = "&Remix";
             this.btnRedo.UseVisualStyleBackColor = true;
             this.btnRedo.Click += new System.EventHandler(this.btnRedo_Click);
@@ -114,7 +120,7 @@
             this.btnSave.Location = new System.Drawing.Point(701, 6);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(80, 27);
-            this.btnSave.TabIndex = 2;
+            this.btnSave.TabIndex = 9;
             this.btnSave.Text = "&Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -137,7 +143,7 @@
             this.pnlMixOnly.Location = new System.Drawing.Point(0, 525);
             this.pnlMixOnly.Name = "pnlMixOnly";
             this.pnlMixOnly.Size = new System.Drawing.Size(784, 36);
-            this.pnlMixOnly.TabIndex = 4;
+            this.pnlMixOnly.TabIndex = 2;
             // 
             // numZ
             // 
@@ -159,7 +165,7 @@
             -2147483648});
             this.numZ.Name = "numZ";
             this.numZ.Size = new System.Drawing.Size(60, 20);
-            this.numZ.TabIndex = 11;
+            this.numZ.TabIndex = 7;
             this.numZ.ValueChanged += new System.EventHandler(this.numZ_ValueChanged);
             // 
             // lblZ
@@ -170,7 +176,7 @@
             this.lblZ.Location = new System.Drawing.Point(489, 13);
             this.lblZ.Name = "lblZ";
             this.lblZ.Size = new System.Drawing.Size(17, 13);
-            this.lblZ.TabIndex = 10;
+            this.lblZ.TabIndex = 6;
             this.lblZ.Text = "&Z:";
             this.lblZ.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblZ.Visible = false;
@@ -195,7 +201,7 @@
             -2147483648});
             this.numY.Name = "numY";
             this.numY.Size = new System.Drawing.Size(60, 20);
-            this.numY.TabIndex = 9;
+            this.numY.TabIndex = 5;
             this.numY.ValueChanged += new System.EventHandler(this.numY_ValueChanged);
             // 
             // lblY
@@ -206,7 +212,7 @@
             this.lblY.Location = new System.Drawing.Point(400, 13);
             this.lblY.Name = "lblY";
             this.lblY.Size = new System.Drawing.Size(17, 13);
-            this.lblY.TabIndex = 8;
+            this.lblY.TabIndex = 4;
             this.lblY.Text = "&Y:";
             this.lblY.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblY.Visible = false;
@@ -231,7 +237,7 @@
             -2147483648});
             this.numX.Name = "numX";
             this.numX.Size = new System.Drawing.Size(60, 20);
-            this.numX.TabIndex = 7;
+            this.numX.TabIndex = 3;
             this.numX.ValueChanged += new System.EventHandler(this.numX_ValueChanged);
             // 
             // lblX
@@ -242,18 +248,19 @@
             this.lblX.Location = new System.Drawing.Point(280, 13);
             this.lblX.Name = "lblX";
             this.lblX.Size = new System.Drawing.Size(48, 13);
-            this.lblX.TabIndex = 6;
+            this.lblX.TabIndex = 2;
             this.lblX.Text = "Offset &X:";
             this.lblX.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblX.Visible = false;
             // 
             // cmbSourceMap
             // 
+            this.cmbSourceMap.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSourceMap.FormattingEnabled = true;
             this.cmbSourceMap.Location = new System.Drawing.Point(114, 10);
             this.cmbSourceMap.Name = "cmbSourceMap";
             this.cmbSourceMap.Size = new System.Drawing.Size(160, 21);
-            this.cmbSourceMap.TabIndex = 5;
+            this.cmbSourceMap.TabIndex = 1;
             this.cmbSourceMap.SelectedIndexChanged += new System.EventHandler(this.cmbSourceMap_SelectedIndexChanged);
             // 
             // lblSourceMap
@@ -264,9 +271,71 @@
             this.lblSourceMap.Location = new System.Drawing.Point(6, 13);
             this.lblSourceMap.Name = "lblSourceMap";
             this.lblSourceMap.Size = new System.Drawing.Size(102, 13);
-            this.lblSourceMap.TabIndex = 4;
+            this.lblSourceMap.TabIndex = 0;
             this.lblSourceMap.Text = "&Modify Source Map:";
             this.lblSourceMap.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pnlView
+            // 
+            this.pnlView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.pnlView.Controls.Add(this.radSide);
+            this.pnlView.Controls.Add(this.radTop);
+            this.pnlView.Controls.Add(this.radFront);
+            this.pnlView.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlView.ForeColor = System.Drawing.Color.White;
+            this.pnlView.Location = new System.Drawing.Point(0, 0);
+            this.pnlView.Name = "pnlView";
+            this.pnlView.Size = new System.Drawing.Size(784, 36);
+            this.pnlView.TabIndex = 0;
+            // 
+            // radFront
+            // 
+            this.radFront.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.radFront.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radFront.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.radFront.Location = new System.Drawing.Point(357, 3);
+            this.radFront.Name = "radFront";
+            this.radFront.Size = new System.Drawing.Size(70, 30);
+            this.radFront.TabIndex = 1;
+            this.radFront.Text = "&Front";
+            this.radFront.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radFront.UseVisualStyleBackColor = true;
+            this.radFront.CheckedChanged += new System.EventHandler(this.radFront_CheckedChanged);
+            // 
+            // radTop
+            // 
+            this.radTop.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.radTop.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radTop.Checked = true;
+            this.radTop.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.radTop.Location = new System.Drawing.Point(281, 3);
+            this.radTop.Name = "radTop";
+            this.radTop.Size = new System.Drawing.Size(70, 30);
+            this.radTop.TabIndex = 0;
+            this.radTop.TabStop = true;
+            this.radTop.Text = "&Top";
+            this.radTop.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radTop.UseVisualStyleBackColor = true;
+            this.radTop.CheckedChanged += new System.EventHandler(this.radTop_CheckedChanged);
+            // 
+            // radSide
+            // 
+            this.radSide.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.radSide.Appearance = System.Windows.Forms.Appearance.Button;
+            this.radSide.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.radSide.Location = new System.Drawing.Point(433, 3);
+            this.radSide.Name = "radSide";
+            this.radSide.Size = new System.Drawing.Size(70, 30);
+            this.radSide.TabIndex = 2;
+            this.radSide.Text = "&Side";
+            this.radSide.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.radSide.UseVisualStyleBackColor = true;
+            this.radSide.CheckedChanged += new System.EventHandler(this.radSide_CheckedChanged);
+            // 
+            // tmrFlash
+            // 
+            this.tmrFlash.Interval = 750;
+            this.tmrFlash.Tick += new System.EventHandler(this.tmrFlash_Tick);
             // 
             // frmMapLayout
             // 
@@ -274,6 +343,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.picLayout);
+            this.Controls.Add(this.pnlView);
             this.Controls.Add(this.pnlWarning);
             this.Controls.Add(this.pnlMixOnly);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -288,6 +358,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numZ)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numX)).EndInit();
+            this.pnlView.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -309,5 +380,10 @@
         private System.Windows.Forms.Label lblY;
         private System.Windows.Forms.NumericUpDown numX;
         private System.Windows.Forms.Label lblX;
+        private System.Windows.Forms.Panel pnlView;
+        private System.Windows.Forms.RadioButton radSide;
+        private System.Windows.Forms.RadioButton radTop;
+        private System.Windows.Forms.RadioButton radFront;
+        private System.Windows.Forms.Timer tmrFlash;
     }
 }

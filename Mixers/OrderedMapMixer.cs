@@ -35,11 +35,13 @@ namespace UnrealMapMixer.Mixers
                 brushRanks.AddRange(map.Brushes
                     .Select(
                         (b, i) => new Tuple<UnrealBrush, double>
-                        (b.Duplicate(offset), (double)i / map.BrushCount)));
+                        (UnrealActorFactory.Duplicate(b, offset), (double)i / map.BrushCount)));
 
                 allActors.AddRange(map.Actors
                     .Where(a => !(a is UnrealBrush))
-                    .Select(a => a.Duplicate(offset)));
+                    .Select(a => UnrealActorFactory.Duplicate(a, offset)));
+
+                new UnrealBrush().Duplicate();
             }
 
             // Merge all brushes
@@ -68,7 +70,7 @@ namespace UnrealMapMixer.Mixers
                     case BrushOperation.NonSolid: prob = mixParams.NonSolidProb; break;
                     case BrushOperation.Subtract: prob = mixParams.SubtractProb; break;
                     case BrushOperation.Mover: prob = mixParams.MoverProb; break;
-                    default: prob = 0.0; break; // probably builder brush, which is already included
+                    default: prob = 0.0; break; // probably a builder brush, which is already included
                 }
 
                 if (RandExp(prob))

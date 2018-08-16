@@ -31,12 +31,12 @@ namespace UnrealMapMixer.Unreal
 
         protected UnrealBrush(UnrealBrush brush) : base(brush)
         {
-            operation = brush.operation;
-            polyFlags = brush.polyFlags;
-            isInvisible = brush.isInvisible;
-            isPortal = brush.isPortal;
-            mainScale = brush.mainScale;
-            postScale = brush.postScale;
+            Operation = brush.Operation;
+            PolyFlags = brush.PolyFlags;
+            IsInvisible = brush.IsInvisible;
+            IsPortal = brush.IsPortal;
+            MainScale = brush.MainScale;
+            PostScale = brush.PostScale;
             polygons = brush.polygons.Select(p => new Polygon(p)).ToList();
             vertices = brush.vertices.Select(p => new Point3D(p)).ToList();
             edges = brush.edges.Select(l => new Line3D(l)).ToList();
@@ -48,52 +48,34 @@ namespace UnrealMapMixer.Unreal
         /// <summary>
         /// Creates a modifiable deep copy of this brush.
         /// </summary>
-        public new UnrealBrush Duplicate() => new UnrealBrush(this);
-
-        /// <summary>
-        /// Creates a copy of this brush, translated by the given offset.
-        /// </summary>
-        public new UnrealBrush Duplicate(Vector3D translateOffset)
-        {
-            var result = new UnrealBrush(this);
-            if (!translateOffset.IsZero())
-                result.Translate(translateOffset);
-            return result;
-        }
+        internal new UnrealBrush Duplicate() => new UnrealBrush(this);
 
         /// <summary>
         /// Creates a read-only instance of a brush.
         /// </summary>
         /// <param name="text">T3D representation to be parsed</param>
         public new static UnrealBrush FromText(string text) => new UnrealBrush(text);
-
-        private BrushOperation operation = BrushOperation.Unknown;
-        private ulong polyFlags = 0;
-        private bool isInvisible = false;
-        private bool isPortal = false;
-        private Scale3D mainScale = new Scale3D();
-        private Scale3D postScale = new Scale3D();
-        private string geometryText;
+        
         private List<Polygon> polygons = new List<Polygon>();
         private List<Point3D> vertices = new List<Point3D>();
         private List<Line3D> edges = new List<Line3D>();
 
-        public BrushOperation Operation => operation;
+        public BrushOperation Operation { get; private set; } = BrushOperation.Unknown;
 
-        public ulong PolyFlags => polyFlags;
+        public ulong PolyFlags { get; private set; } = 0;
 
-        public bool IsInvisible => isInvisible;
+        public bool IsInvisible { get; private set; } = false;
 
-        public bool IsPortal => isPortal;
+        public bool IsPortal { get; private set; } = false;
 
-        public Scale3D MainScale => mainScale;
+        public Scale3D MainScale { get; private set; } = new Scale3D();
 
-        public Scale3D PostScale => postScale;
+        public Scale3D PostScale { get; private set; } = new Scale3D();
 
-        public bool IsScaled => (mainScale.X != 1.0 || mainScale.Y != 1.0 || mainScale.Z != 1.0 || mainScale.SheerRate != 0.0
-            || postScale.X != 1.0 || postScale.Y != 1.0 || postScale.Z != 1.0 || postScale.SheerRate != 0.0);
+        public bool IsScaled => (MainScale.X != 1.0 || MainScale.Y != 1.0 || MainScale.Z != 1.0 || MainScale.SheerRate != 0.0
+            || PostScale.X != 1.0 || PostScale.Y != 1.0 || PostScale.Z != 1.0 || PostScale.SheerRate != 0.0);
 
-        public string GeometryText => geometryText;
+        public string GeometryText { get; private set; }
 
         public IEnumerable<Polygon> Polygons => polygons;
 
@@ -103,47 +85,48 @@ namespace UnrealMapMixer.Unreal
 
         #region Text handling
 
-        protected override string generateText()
+        protected override string GenerateText()
         {
             return T3DParser.GenerateText(this);
         }
 
-        protected override void loadText(string text)
+        protected override void LoadText(string text)
         {
             // Load properties
-            base.loadText(text);
-            loadFlags();
-            loadOperation();
-            loadScale();
+            base.LoadText(text);
+            LoadFlags();
+            LoadOperation();
+            LoadScale();
 
             // Load geometry
-            geometryText = T3DParser.GetGeometryText(text);
-            processGeometry();
+            GeometryText = T3DParser.GetGeometryText(text);
+            ProcessGeometry();
         }
 
-        private void loadFlags()
+        private void LoadFlags()
         {
-            polyFlags = 0;
-            isInvisible = false;
-            isPortal = false;
+            PolyFlags = 0;
+            IsInvisible = false;
+            IsPortal = false;
 
             string value = GetProperty("PolyFlags");
-            if (value != null && ulong.TryParse(value, out polyFlags))
+            if (value != null && ulong.TryParse(value, out ulong polyFlags))
             {
-                isInvisible = ((polyFlags & 1 << 1) != 0);
-                isPortal = ((polyFlags & 1 << 26) != 0);
+                PolyFlags = polyFlags;
+                IsInvisible = ((PolyFlags & 1 << 1) != 0);
+                IsPortal = ((PolyFlags & 1 << 26) != 0);
             }
 
             // TODO: include individual polygons as well (round average?)
         }
 
-        private void loadOperation()
+        private void LoadOperation()
         {
             // https://wiki.beyondunreal.com/Legacy:PolyFlags
-            operation = BrushOperation.Unknown;
+            Operation = BrushOperation.Unknown;
 
             if (Class == "Mover")
-                operation = BrushOperation.Mover;
+                Operation = BrushOperation.Mover;
             else
             {
                 string value = GetProperty("CsgOper");
@@ -151,37 +134,37 @@ namespace UnrealMapMixer.Unreal
                 {
                     if (value == "CSG_Add")
                     {
-                        if ((polyFlags & 1 << 5) != 0)
-                            operation = BrushOperation.SemiSolid;
-                        else if ((polyFlags & 1 << 3) != 0)
-                            operation = BrushOperation.NonSolid;
+                        if ((PolyFlags & 1 << 5) != 0)
+                            Operation = BrushOperation.SemiSolid;
+                        else if ((PolyFlags & 1 << 3) != 0)
+                            Operation = BrushOperation.NonSolid;
                         else
-                            operation = BrushOperation.Solid;
+                            Operation = BrushOperation.Solid;
                     }
                     else if (value == "CSG_Subtract")
-                        operation = BrushOperation.Subtract;
+                        Operation = BrushOperation.Subtract;
                 }
             }
         }
 
-        private void loadScale()
+        private void LoadScale()
         {
             string value = GetProperty("MainScale");
             if (value != null)
-                mainScale = Scale3D.FromProperty(value);
+                MainScale = Scale3D.FromProperty(value);
             value = GetProperty("PostScale");
             if (value != null)
-                postScale = Scale3D.FromProperty(value);
+                PostScale = Scale3D.FromProperty(value);
         }
 
         #endregion
 
         #region Geometry
 
-        private void processGeometry()
+        private void ProcessGeometry()
         {
             // TODO: apply rotation and scaling
-            polygons = T3DParser.LoadPolygons(geometryText, Location).ToList();
+            polygons = T3DParser.LoadPolygons(GeometryText, Location).ToList();
             loadVertices();
             loadEdges();
         }
@@ -219,8 +202,8 @@ namespace UnrealMapMixer.Unreal
             if (isReadOnly)
                 throw new InvalidOperationException("This map cannot be modified because it is read-only");
 
-            geometryText = T3DParser.TranslateVertex(geometryText, from, to, MinVertexDist);
-            processGeometry();
+            GeometryText = T3DParser.TranslateVertex(GeometryText, from, to, MinVertexDist);
+            ProcessGeometry();
         }
 
         /// <returns>Whether this brush has at least one slanted surface.</returns>

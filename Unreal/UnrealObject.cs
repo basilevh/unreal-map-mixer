@@ -33,7 +33,7 @@ namespace UnrealMapMixer.Unreal
         protected UnrealObject(string text) : this()
         {
             // Parse text
-            loadText(text);
+            LoadText(text);
             // Now make it read-only
             isReadOnly = true;
             // Store original text
@@ -54,15 +54,15 @@ namespace UnrealMapMixer.Unreal
             {
                 if (!isReadOnly && textDirty)
                 {
-                    text = generateText();
+                    text = GenerateText();
                     textDirty = false;
                 }
                 return text;
             }
         }
 
-        protected abstract string generateText();
+        protected abstract string GenerateText();
 
-        protected abstract void loadText(string text);
+        protected abstract void LoadText(string text);
     }
 }
