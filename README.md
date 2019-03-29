@@ -1,5 +1,5 @@
 # unreal-map-mixer
-Combines multiple Unreal Tournament levels into a fun geometric mash-up using T3D files.
+Combines multiple Unreal Tournament levels into a fun geometric mash-up using T3D files, by randomly inserting brushes and actors from the selected source maps.
 Only UT99 maps have been tested so far, I will look into other versions at a later time. Normally it _should_ work for Unreal, UT99, UT2003 and UT2004; see [this Unreal Wiki link](https://wiki.beyondunreal.com/Legacy:T3D_File) for more information.
 
 ## General usage
